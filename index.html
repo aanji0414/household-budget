@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>가계부</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 <!-- Material Design 3 Web Components -->
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -340,8 +341,11 @@
 
   <!-- Navigation Tabs -->
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('dashboard')">
-      <span class="material-icons-round">dashboard</span>대시보드
+    <button class="nav-tab active" onclick="switchTab('yearly')">
+      <span class="material-icons-round">show_chart</span>연간 흐름
+    </button>
+    <button class="nav-tab" onclick="switchTab('dashboard')">
+      <span class="material-icons-round">dashboard</span>월간 현황
     </button>
     <button class="nav-tab" onclick="switchTab('income')">
       <span class="material-icons-round">payments</span>수입
@@ -360,7 +364,7 @@
   <div class="content">
 
     <!-- DASHBOARD -->
-    <div id="pane-dashboard" class="pane active">
+    <div id="pane-dashboard" class="pane">
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-icon">💰</div>
@@ -440,6 +444,99 @@
           </div>
         </div>
         <div class="progress-section" id="budget-progress"></div>
+      </div>
+    </div>
+
+    <!-- YEARLY -->
+    <div id="pane-yearly" class="pane active">
+      <div class="md-card" style="padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span class="material-icons-round" style="color:var(--md-primary)">calendar_today</span>
+        <span style="font-size:14px;font-weight:600">연도 선택</span>
+        <div class="month-select-wrap">
+          <select id="year-picker" style="padding:8px 32px 8px 14px;border:1px solid var(--md-outline);border-radius:var(--md-shape-xl);font-size:13px;font-weight:500;font-family:inherit;color:var(--md-on-surface);cursor:pointer;outline:none;appearance:none;background:#fff;"></select>
+        </div>
+        <button id="yearly-load-btn" class="tonal-btn" onclick="loadYearlyData()">
+          <span class="material-icons-round">refresh</span>불러오기
+        </button>
+        <span id="yearly-status" style="font-size:12px;color:var(--md-on-surface-variant)"></span>
+      </div>
+
+      <!-- KPI 연간 합계 -->
+      <div class="kpi-grid" id="yearly-kpi" style="margin-bottom:16px"></div>
+
+      <!-- 월별 수입/지출 바 차트 -->
+      <div class="md-card" style="margin-bottom:16px">
+        <div class="md-card-header">
+          <div class="md-card-title">
+            <span class="material-icons-round" style="color:var(--md-primary)">bar_chart</span>
+            월별 수입 · 지출
+          </div>
+        </div>
+        <div style="padding:16px;position:relative;height:280px">
+          <canvas id="chart-income-expense"></canvas>
+        </div>
+      </div>
+
+      <!-- 월별 순잔액 라인 차트 -->
+      <div class="md-card" style="margin-bottom:16px">
+        <div class="md-card-header">
+          <div class="md-card-title">
+            <span class="material-icons-round" style="color:var(--md-success)">trending_up</span>
+            월별 순잔액 추이
+          </div>
+        </div>
+        <div style="padding:16px;position:relative;height:240px">
+          <canvas id="chart-balance"></canvas>
+        </div>
+      </div>
+
+      <!-- 저축 잔액 추이 -->
+      <div class="md-card" style="margin-bottom:16px">
+        <div class="md-card-header">
+          <div class="md-card-title">
+            <span class="material-icons-round" style="color:var(--md-savings-color)">savings</span>
+            월별 저축 잔액 추이
+          </div>
+        </div>
+        <div style="padding:16px;position:relative;height:240px">
+          <canvas id="chart-savings"></canvas>
+        </div>
+      </div>
+
+      <!-- 월별 상세 테이블 -->
+      <div class="md-card">
+        <div class="md-card-header">
+          <div class="md-card-title">
+            <span class="material-icons-round">table_chart</span>월별 상세
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="md-table" id="yearly-table">
+            <thead>
+              <tr>
+                <th>월</th>
+                <th class="num">수입</th>
+                <th class="num">지출</th>
+                <th class="num">순잔액</th>
+                <th class="num">적금 납입</th>
+                <th class="num">저축 잔액</th>
+                <th class="num">주식 평가</th>
+              </tr>
+            </thead>
+            <tbody id="yearly-tbody"></tbody>
+            <tfoot>
+              <tr class="total-row" id="yearly-tfoot-row">
+                <td>연간 합계</td>
+                <td class="calc-cell" id="yt-inc">-</td>
+                <td class="calc-cell" id="yt-exp">-</td>
+                <td class="calc-cell" id="yt-bal">-</td>
+                <td class="calc-cell" id="yt-sav">-</td>
+                <td class="calc-cell" id="yt-savbal">-</td>
+                <td class="calc-cell" id="yt-stk">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -775,10 +872,11 @@ function toast(msg) {
 // ── Tab ────────────────────────────────────────
 window.switchTab = name => {
   document.querySelectorAll('.nav-tab').forEach((t,i) =>
-    t.classList.toggle('active', ['dashboard','income','expense','stock','savings'][i]===name));
+    t.classList.toggle('active', ['yearly','dashboard','income','expense','stock','savings'][i]===name));
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
   document.getElementById('pane-'+name).classList.add('active');
   if (name==='dashboard') updateDashboard();
+  if (name==='yearly') initYearlyTab();
 };
 
 // ── Row builders ───────────────────────────────
@@ -1024,6 +1122,142 @@ function updateDashboard() {
     </div>`;
   });
   if(!hasItem) bp.innerHTML='<p style="color:#aaa;text-align:center;padding:20px;font-size:13px">생활비 탭에서 값을 입력하면 현황이 표시됩니다.</p>';
+}
+
+// ── Yearly ─────────────────────────────────────
+let yearlyCharts = {};
+
+function initYearlyTab() {
+  const sel = document.getElementById('year-picker');
+  if (sel.children.length) return;
+  const now = new Date();
+  for (let y = now.getFullYear(); y >= 2020; y--) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y + '년';
+    sel.appendChild(o);
+  }
+}
+
+window.loadYearlyData = async () => {
+  if (!currentUid) return;
+  const year = document.getElementById('year-picker').value;
+  const status = document.getElementById('yearly-status');
+  status.innerHTML = '<span class="spinner"></span>불러오는 중…';
+
+  const months = Array.from({length:12},(_,i)=>`${year}-${String(i+1).padStart(2,'0')}`);
+  const labels = months.map(m => m.slice(5)+'월');
+  const rows = [];
+
+  await Promise.all(months.map(async (m, i) => {
+    try {
+      const snap = await getDoc(doc(db, 'users', currentUid, 'months', m));
+      const d = snap.exists() ? snap.data() : {};
+      const inc  = (d.income  ||[]).reduce((s,r)=>s+(r.amount||0),0);
+      const exp  = (d.expense ||[]).reduce((s,r)=>s+(r.amount||0),0);
+      const savM = (d.savings ||[]).reduce((s,r)=>s+(r.amount||0),0);
+      const savB = (d.savings ||[]).reduce((s,r)=>s+(r.balance||0),0)
+                 + (d.deposit ||[]).reduce((s,r)=>s+(r.balance||0),0);
+      const stkC = (d.stock   ||[]).reduce((s,r)=>s+(r.current||0),0);
+      rows[i] = { label: labels[i], inc, exp, bal: inc-exp-savM, savM, savB, stkC };
+    } catch { rows[i] = { label: labels[i], inc:0, exp:0, bal:0, savM:0, savB:0, stkC:0 }; }
+  }));
+
+  status.textContent = `✓ ${year}년 데이터 로드 완료`;
+  renderYearlyKpi(rows);
+  renderYearlyCharts(rows);
+  renderYearlyTable(rows);
+};
+
+function renderYearlyKpi(rows) {
+  const totInc = rows.reduce((s,r)=>s+r.inc,0);
+  const totExp = rows.reduce((s,r)=>s+r.exp,0);
+  const totBal = rows.reduce((s,r)=>s+r.bal,0);
+  const lastSavB = [...rows].reverse().find(r=>r.savB>0)?.savB || 0;
+  const kpis = [
+    { icon:'💰', label:'연간 수입', val:fmt(totInc), cls:'positive' },
+    { icon:'🛒', label:'연간 지출', val:fmt(totExp), cls:'negative' },
+    { icon:'💡', label:'연간 순잔액', val:fmt(totBal), cls: totBal>=0?'positive':'negative' },
+    { icon:'🏦', label:'최근 저축 잔액', val:fmt(lastSavB), cls:'' },
+  ];
+  document.getElementById('yearly-kpi').innerHTML = kpis.map(k=>`
+    <div class="kpi-card">
+      <div class="kpi-icon">${k.icon}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value ${k.cls}">${k.val}</div>
+    </div>`).join('');
+}
+
+function renderYearlyCharts(rows) {
+  const labels = rows.map(r=>r.label);
+  const destroy = id => { if(yearlyCharts[id]){ yearlyCharts[id].destroy(); delete yearlyCharts[id]; } };
+
+  destroy('ie'); destroy('bal'); destroy('sav');
+
+  yearlyCharts['ie'] = new Chart(document.getElementById('chart-income-expense'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label:'수입', data: rows.map(r=>r.inc), backgroundColor:'rgba(30,142,62,.7)', borderRadius:4 },
+        { label:'지출', data: rows.map(r=>r.exp), backgroundColor:'rgba(217,48,37,.7)', borderRadius:4 },
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top' } },
+      scales:{ y:{ ticks:{ callback: v => '₩'+v.toLocaleString('ko-KR') } } } }
+  });
+
+  yearlyCharts['bal'] = new Chart(document.getElementById('chart-balance'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{ label:'순잔액', data: rows.map(r=>r.bal),
+        borderColor:'#1a73e8', backgroundColor:'rgba(26,115,232,.1)',
+        fill:true, tension:.35, pointRadius:4 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+      scales:{ y:{ ticks:{ callback: v => '₩'+v.toLocaleString('ko-KR') } } } }
+  });
+
+  yearlyCharts['sav'] = new Chart(document.getElementById('chart-savings'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label:'저축 잔액', data: rows.map(r=>r.savB),
+          borderColor:'#9334e6', backgroundColor:'rgba(147,52,230,.1)', fill:true, tension:.35, pointRadius:4 },
+        { label:'주식 평가', data: rows.map(r=>r.stkC),
+          borderColor:'#1a73e8', backgroundColor:'rgba(26,115,232,.08)', fill:false, tension:.35, pointRadius:4 },
+      ]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top' } },
+      scales:{ y:{ ticks:{ callback: v => '₩'+v.toLocaleString('ko-KR') } } } }
+  });
+}
+
+function renderYearlyTable(rows) {
+  const tbody = document.getElementById('yearly-tbody');
+  tbody.innerHTML = rows.map(r=>`<tr>
+    <td style="font-weight:500">${r.label}</td>
+    <td class="calc-cell positive">${r.inc?fmt(r.inc):'-'}</td>
+    <td class="calc-cell negative">${r.exp?fmt(r.exp):'-'}</td>
+    <td class="calc-cell ${r.bal>=0?'positive':'negative'}">${(r.inc||r.exp)?fmt(r.bal):'-'}</td>
+    <td class="calc-cell">${r.savM?fmt(r.savM):'-'}</td>
+    <td class="calc-cell">${r.savB?fmt(r.savB):'-'}</td>
+    <td class="calc-cell">${r.stkC?fmt(r.stkC):'-'}</td>
+  </tr>`).join('');
+
+  const sum = (k) => rows.reduce((s,r)=>s+r[k],0);
+  document.getElementById('yt-inc').textContent = fmt(sum('inc'));
+  document.getElementById('yt-exp').textContent = fmt(sum('exp'));
+  const totBal = sum('bal');
+  const balEl = document.getElementById('yt-bal');
+  balEl.textContent = fmt(totBal);
+  balEl.className = `calc-cell ${totBal>=0?'positive':'negative'}`;
+  document.getElementById('yt-sav').textContent = fmt(sum('savM'));
+  const lastSavB = [...rows].reverse().find(r=>r.savB>0)?.savB || 0;
+  document.getElementById('yt-savbal').textContent = lastSavB ? fmt(lastSavB) : '-';
+  const lastStk = [...rows].reverse().find(r=>r.stkC>0)?.stkC || 0;
+  document.getElementById('yt-stk').textContent = lastStk ? fmt(lastStk) : '-';
 }
 
 // ── Excel ──────────────────────────────────────
