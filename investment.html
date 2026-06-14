@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>투자 기록</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+/* ── 토큰 ── */
+:root {
+  --bg:         #f0f2f5;
+  --bg2:        #ffffff;
+  --bg3:        #f8f9fc;
+  --surface:    #ffffff;
+  --border:     #e4e7ec;
+  --text:       #101828;
+  --text2:      #475467;
+  --text3:      #98a2b3;
+  --accent:     #3b82f6;
+  --accent-bg:  #eff6ff;
+  --green:      #10b981;
+  --green-bg:   #ecfdf5;
+  --red:        #ef4444;
+  --red-bg:     #fef2f2;
+  --yellow:     #f59e0b;
+  --yellow-bg:  #fffbeb;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:  0 16px 40px rgba(0,0,0,.12);
+  --radius:     16px;
+  --radius-sm:  10px;
+  --font:       'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  --nav-h:      64px;
+  --bottom-h:   72px;
+}
+[data-theme="dark"] {
+  --bg:         #0d1117;
+  --bg2:        #161b22;
+  --bg3:        #1c2230;
+  --surface:    #1c2230;
+  --border:     #2d3748;
+  --text:       #f0f6fc;
+  --text2:      #8b949e;
+  --text3:      #6e7681;
+  --accent:     #58a6ff;
+  --accent-bg:  #0d2136;
+  --green:      #3fb950;
+  --green-bg:   #0d1f12;
+  --red:        #f85149;
+  --red-bg:     #1f0d0d;
+  --yellow:     #d29922;
+  --yellow-bg:  #1f1a0d;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:  0 16px 40px rgba(0,0,0,.5);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  transition: background .2s, color .2s;
+}
+
+/* ── 로그인 ── */
+#login-screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+  padding: 24px;
+}
+.login-card {
+  background: rgba(255,255,255,.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 24px;
+  padding: 48px 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,.4);
+}
+.login-logo {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 28px; color: #fff;
+}
+.login-card h1 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.login-card p  { font-size: 14px; color: rgba(255,255,255,.5); margin-bottom: 36px; }
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; padding: 14px 20px;
+  background: #fff; border: none; border-radius: 12px;
+  font-family: var(--font); font-size: 15px; font-weight: 600; color: #1a1a2e;
+  cursor: pointer; transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.btn-google:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+.btn-google:active { transform: translateY(0); }
+.btn-google img { width: 20px; height: 20px; }
+
+/* ── 앱 레이아웃 ── */
+#app { display: none; min-height: 100dvh; }
+
+/* 상단 nav */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: var(--shadow-sm);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #fff;
+}
+.nav-logo span { font-size: 17px; font-weight: 800; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 10px; border: none;
+  background: transparent; color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: background .15s, color .15s;
+}
+.icon-btn:hover { background: var(--bg3); color: var(--text); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  object-fit: cover; cursor: pointer;
+  border: 2px solid var(--border);
+}
+
+/* 페이지 컨테이너 */
+.page-wrap {
+  padding-top: var(--nav-h);
+  padding-bottom: calc(var(--bottom-h) + 12px);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* 하단 탭 */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: var(--bottom-h);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 8px;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -4px 16px rgba(0,0,0,.06);
+}
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 8px 0; border: none; background: none; cursor: pointer;
+  color: var(--text3); font-family: var(--font); font-size: 11px; font-weight: 500;
+  border-radius: 12px; transition: color .2s;
+}
+.tab-item .material-icons-round { font-size: 22px; }
+.tab-item.active { color: var(--accent); }
+.tab-item.active .tab-indicator {
+  width: 4px; height: 4px; background: var(--accent);
+  border-radius: 99px; margin-top: 2px;
+}
+
+/* ── 섹션 패딩 ── */
+.section { padding: 20px 16px; }
+.section + .section { padding-top: 0; }
+
+/* ── 카드 ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px 0;
+}
+.card-title { font-size: 14px; font-weight: 600; color: var(--text2); }
+
+/* ── 대시보드 요약 카드 ── */
+.summary-card {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.summary-card::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: rgba(59,130,246,.15);
+  border-radius: 50%;
+}
+.summary-card::after {
+  content: '';
+  position: absolute; bottom: -60px; right: 40px;
+  width: 120px; height: 120px;
+  background: rgba(139,92,246,.12);
+  border-radius: 50%;
+}
+.summary-label { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.6); margin-bottom: 8px; }
+.summary-amount { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.summary-item { background: rgba(255,255,255,.08); border-radius: 12px; padding: 12px 14px; }
+.summary-item-label { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+.summary-item-value { font-size: 16px; font-weight: 700; }
+.pos { color: #34d399; }
+.neg { color: #f87171; }
+.neu { color: rgba(255,255,255,.9); }
+
+/* ── 스탯 그리드 ── */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.stat-value { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+.stat-label { font-size: 12px; color: var(--text3); font-weight: 500; }
+
+/* ── 종목 리스트 ── */
+.holding-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .15s;
+}
+.holding-item:last-child { border-bottom: none; }
+.holding-item:hover { background: var(--bg3); }
+.holding-icon {
+  width: 44px; height: 44px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 800; flex-shrink: 0;
+}
+.holding-info { flex: 1; min-width: 0; }
+.holding-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.holding-sub  { font-size: 12px; color: var(--text3); }
+.holding-right { text-align: right; flex-shrink: 0; }
+.holding-value { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.holding-pnl  { font-size: 12px; font-weight: 600; }
+.tag {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px;
+  border-radius: 6px; margin-top: 3px;
+}
+.tag-stock  { background: var(--accent-bg); color: var(--accent); }
+.tag-etf    { background: #f0fdf4; color: #15803d; }
+.tag-crypto { background: #fff7ed; color: #c2410c; }
+.tag-other  { background: var(--bg3); color: var(--text2); }
+[data-theme="dark"] .tag-etf    { background: #0d1f12; color: #4ade80; }
+[data-theme="dark"] .tag-crypto { background: #1c1107; color: #fb923c; }
+
+/* ── 거래 리스트 ── */
+.tx-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+}
+.tx-item:last-child { border-bottom: none; }
+.tx-badge {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.tx-badge.buy  { background: var(--green-bg); color: var(--green); }
+.tx-badge.sell { background: var(--red-bg);   color: var(--red);   }
+.tx-info { flex: 1; min-width: 0; }
+.tx-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.tx-sub  { font-size: 12px; color: var(--text3); }
+.tx-right { text-align: right; flex-shrink: 0; }
+.tx-amount { font-size: 14px; font-weight: 700; }
+.tx-date   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* ── 차트 컨테이너 ── */
+.chart-wrap { padding: 16px 20px; }
+.chart-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.legend-item { display: flex; align-items: center; gap: 10px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-name { flex: 1; font-size: 13px; font-weight: 500; }
+.legend-pct  { font-size: 13px; font-weight: 700; color: var(--text2); }
+
+/* ── FAB ── */
+.fab {
+  position: fixed; bottom: calc(var(--bottom-h) + 16px); right: 20px;
+  width: 52px; height: 52px; border-radius: 16px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border: none; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; box-shadow: 0 4px 20px rgba(59,130,246,.45);
+  transition: transform .2s, box-shadow .2s; z-index: 90;
+}
+.fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 28px rgba(59,130,246,.5); }
+.fab:active { transform: scale(.96); }
+
+/* ── 모달 ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface);
+  border-radius: 24px 24px 0 0;
+  width: 100%; max-width: 600px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.32,1,.23,1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle {
+  width: 36px; height: 4px; background: var(--border);
+  border-radius: 99px; margin: 12px auto 0;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 0;
+}
+.modal-title { font-size: 18px; font-weight: 800; }
+.modal-body { padding: 20px; }
+.modal-footer {
+  padding: 12px 20px 24px;
+  display: flex; gap: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── 폼 ── */
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; }
+.form-input, .form-select {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg3); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font);
+  font-size: 15px; color: var(--text);
+  transition: border-color .15s, box-shadow .15s; outline: none;
+}
+.form-input:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-hint { font-size: 12px; color: var(--text3); margin-top: 4px; }
+.seg-control {
+  display: flex; background: var(--bg3); border-radius: var(--radius-sm);
+  padding: 4px; gap: 4px;
+}
+.seg-btn {
+  flex: 1; padding: 9px 12px; border-radius: 8px; border: none;
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  background: transparent; color: var(--text2); cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.seg-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+.seg-btn.buy-active  { background: var(--green);  color: #fff; }
+.seg-btn.sell-active { background: var(--red);    color: #fff; }
+
+/* ── 버튼 ── */
+.btn {
+  flex: 1; padding: 14px 20px; border-radius: 12px; border: none;
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary { background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; }
+.btn-secondary { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+.btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.2); }
+
+/* ── 섹션 헤더 ── */
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.section-head h2 { font-size: 16px; font-weight: 800; }
+.link-btn { font-size: 13px; font-weight: 600; color: var(--accent); background: none; border: none; cursor: pointer; }
+
+/* ── 탭 페이지 토글 ── */
+.tab-page { display: none; }
+.tab-page.active { display: block; }
+
+/* ── 빈 상태 ── */
+.empty-state {
+  text-align: center; padding: 48px 24px;
+}
+.empty-state .material-icons-round { font-size: 48px; color: var(--text3); margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.empty-state p  { font-size: 14px; color: var(--text3); }
+
+/* ── 필터 칩 ── */
+.filter-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 12px; scrollbar-width: none; }
+.filter-row::-webkit-scrollbar { display: none; }
+.chip {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border-radius: 99px; border: 1.5px solid var(--border);
+  background: var(--surface); font-family: var(--font); font-size: 13px; font-weight: 600;
+  color: var(--text2); cursor: pointer; white-space: nowrap; transition: all .15s;
+}
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── 보유종목 상세 모달 ── */
+.detail-summary { background: var(--bg3); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; }
+.detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+.detail-row + .detail-row { border-top: 1px solid var(--border); }
+.detail-key { font-size: 13px; color: var(--text3); }
+.detail-val { font-size: 14px; font-weight: 700; }
+
+/* ── 반응형 ── */
+@media (min-width: 600px) {
+  .page-wrap { padding: calc(var(--nav-h) + 20px) 20px 100px; }
+  .section { padding: 0 0 20px; }
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 900px) {
+  .bottom-nav { display: none; }
+  .fab { bottom: 24px; }
+  .page-wrap { padding-bottom: 40px; }
+  .side-nav { display: flex; }
+}
+
+/* 로딩 */
+.spinner {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  animation: spin .6s linear infinite; margin: 40px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* 숫자 입력 화살표 제거 */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+</style>
+</head>
+<body>
+
+<!-- 로그인 화면 -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">📈</div>
+    <h1>투자 기록</h1>
+    <p>나만의 포트폴리오를 스마트하게 관리하세요</p>
+    <button class="btn-google" onclick="signInWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+      Google로 시작하기
+    </button>
+  </div>
+</div>
+
+<!-- 앱 -->
+<div id="app">
+  <!-- 상단 nav -->
+  <nav class="top-nav">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">📈</div>
+      <span>투자 기록</span>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="toggleTheme()" title="다크모드">
+        <span class="material-icons-round" id="theme-icon">dark_mode</span>
+      </button>
+      <img id="user-avatar" class="avatar" src="" alt="" onclick="showUserMenu()" onerror="this.style.display='none'">
+    </div>
+  </nav>
+
+  <!-- 페이지 -->
+  <div class="page-wrap">
+
+    <!-- 대시보드 -->
+    <div id="page-dashboard" class="tab-page active">
+      <div class="section">
+        <div class="summary-card" id="summary-card">
+          <div class="summary-label">총 평가금액</div>
+          <div class="summary-amount" id="total-value">₩0</div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-item-label">총 투자금액</div>
+              <div class="summary-item-value neu" id="total-invest">₩0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-item-label">평가손익</div>
+              <div class="summary-item-value" id="total-pnl">₩0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-item-label">수익률</div>
+              <div class="summary-item-value" id="total-rate">0.00%</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-item-label">보유 종목 수</div>
+              <div class="summary-item-value neu" id="holding-count">0개</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 포트폴리오 차트 -->
+      <div class="section">
+        <div class="section-head">
+          <h2>포트폴리오 비중</h2>
+        </div>
+        <div class="card">
+          <div class="chart-wrap" id="chart-wrap">
+            <div class="empty-state" id="chart-empty">
+              <span class="material-icons-round">pie_chart</span>
+              <h3>아직 보유 종목이 없어요</h3>
+              <p>+ 버튼으로 투자 종목을 추가하세요</p>
+            </div>
+            <canvas id="portfolio-chart" style="display:none; max-height:220px;"></canvas>
+            <div class="chart-legend" id="chart-legend"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 최근 거래 -->
+      <div class="section">
+        <div class="section-head">
+          <h2>최근 거래</h2>
+          <button class="link-btn" onclick="switchTab('transactions')">전체 보기</button>
+        </div>
+        <div class="card">
+          <div id="recent-tx-list">
+            <div class="empty-state">
+              <span class="material-icons-round">receipt_long</span>
+              <h3>거래 내역이 없어요</h3>
+              <p>종목을 추가하면 거래 내역이 쌓여요</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 보유 종목 -->
+    <div id="page-holdings" class="tab-page">
+      <div class="section">
+        <div class="filter-row" style="padding: 0 0 12px;">
+          <button class="chip active" onclick="filterHoldings('all', this)">전체</button>
+          <button class="chip" onclick="filterHoldings('stock', this)">주식</button>
+          <button class="chip" onclick="filterHoldings('etf', this)">ETF</button>
+          <button class="chip" onclick="filterHoldings('crypto', this)">코인</button>
+          <button class="chip" onclick="filterHoldings('other', this)">기타</button>
+        </div>
+        <div class="card" id="holdings-list">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 거래 내역 -->
+    <div id="page-transactions" class="tab-page">
+      <div class="section">
+        <div class="filter-row" style="padding: 0 0 12px;">
+          <button class="chip active" onclick="filterTx('all', this)">전체</button>
+          <button class="chip" onclick="filterTx('buy', this)">매수</button>
+          <button class="chip" onclick="filterTx('sell', this)">매도</button>
+        </div>
+        <div class="card" id="tx-list">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 분석 -->
+    <div id="page-analysis" class="tab-page">
+      <div class="section">
+        <div class="section-head"><h2>자산 배분</h2></div>
+        <div class="card">
+          <div class="chart-wrap">
+            <canvas id="category-chart" style="max-height:200px;"></canvas>
+            <div class="chart-legend" id="cat-legend" style="margin-top:16px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="section" style="padding-top:0">
+        <div class="section-head"><h2>종목별 손익</h2></div>
+        <div class="card" id="pnl-chart-wrap">
+          <div class="chart-wrap">
+            <canvas id="pnl-chart" style="max-height:240px;"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="section" style="padding-top:0">
+        <div class="section-head"><h2>수익률 순위</h2></div>
+        <div class="card" id="rank-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 하단 탭 -->
+  <nav class="bottom-nav">
+    <button class="tab-item active" onclick="switchTab('dashboard')" id="tab-dashboard">
+      <span class="material-icons-round">home</span>
+      홈
+    </button>
+    <button class="tab-item" onclick="switchTab('holdings')" id="tab-holdings">
+      <span class="material-icons-round">account_balance_wallet</span>
+      보유종목
+    </button>
+    <button class="tab-item" onclick="switchTab('transactions')" id="tab-transactions">
+      <span class="material-icons-round">receipt_long</span>
+      거래내역
+    </button>
+    <button class="tab-item" onclick="switchTab('analysis')" id="tab-analysis">
+      <span class="material-icons-round">bar_chart</span>
+      분석
+    </button>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab" onclick="openAddModal()" title="추가">
+    <span class="material-icons-round">add</span>
+  </button>
+</div>
+
+<!-- 거래 추가 모달 -->
+<div class="modal-overlay" id="add-modal" onclick="closeModal(event, 'add-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title" id="add-modal-title">거래 추가</span>
+      <button class="icon-btn" onclick="closeModalById('add-modal')">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- 매수/매도 선택 -->
+      <div class="form-group">
+        <div class="seg-control">
+          <button class="seg-btn buy-active" id="type-buy" onclick="setTxType('buy')">매수</button>
+          <button class="seg-btn" id="type-sell" onclick="setTxType('sell')">매도</button>
+        </div>
+      </div>
+      <!-- 종목 선택 or 신규 -->
+      <div class="form-group" id="holding-select-group">
+        <label class="form-label">종목 선택</label>
+        <select class="form-select" id="holding-select" onchange="onHoldingSelect()">
+          <option value="">-- 새 종목 추가 --</option>
+        </select>
+      </div>
+      <!-- 새 종목 입력 -->
+      <div id="new-holding-fields">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">종목명 *</label>
+            <input class="form-input" id="f-name" type="text" placeholder="삼성전자">
+          </div>
+          <div class="form-group">
+            <label class="form-label">티커/심볼</label>
+            <input class="form-input" id="f-ticker" type="text" placeholder="005930">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">분류</label>
+            <select class="form-select" id="f-category">
+              <option value="stock">주식</option>
+              <option value="etf">ETF</option>
+              <option value="crypto">코인</option>
+              <option value="other">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">통화</label>
+            <select class="form-select" id="f-currency">
+              <option value="KRW">KRW (₩)</option>
+              <option value="USD">USD ($)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border); margin: 4px 0 16px;">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">거래가 *</label>
+          <input class="form-input" id="f-price" type="number" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">수량 *</label>
+          <input class="form-input" id="f-qty" type="number" placeholder="0" min="0" step="any">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">거래일</label>
+          <input class="form-input" id="f-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">수수료</label>
+          <input class="form-input" id="f-fee" type="number" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모</label>
+        <input class="form-input" id="f-memo" type="text" placeholder="투자 이유, 전략 등">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModalById('add-modal')">취소</button>
+      <button class="btn btn-primary" onclick="submitTransaction()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 종목 상세 모달 -->
+<div class="modal-overlay" id="detail-modal" onclick="closeModal(event, 'detail-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title" id="detail-title">종목 상세</span>
+      <button class="icon-btn" onclick="closeModalById('detail-modal')">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-summary" id="detail-body"></div>
+      <!-- 현재가 업데이트 -->
+      <div class="form-group">
+        <label class="form-label">현재가 업데이트</label>
+        <div style="display:flex; gap:10px;">
+          <input class="form-input" id="current-price-input" type="number" placeholder="현재가 입력" min="0">
+          <button class="btn btn-primary" style="flex:none; padding: 0 20px;" onclick="updateCurrentPrice()">적용</button>
+        </div>
+        <div class="form-hint">현재가를 입력하면 평가손익이 업데이트돼요</div>
+      </div>
+      <!-- 해당 종목 거래 내역 -->
+      <div id="detail-tx-list"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="deleteHolding()">종목 삭제</button>
+      <button class="btn btn-primary" onclick="addTxForHolding()">거래 추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp }   from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+  from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+import {
+  getFirestore, collection, doc, getDocs, addDoc, setDoc, updateDoc, deleteDoc,
+  query, orderBy, where, onSnapshot
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBu1IfdRLE3cBAo5TIB4fF7g0s3L-kLukY",
+  authDomain:        "household-budget-8107e.firebaseapp.com",
+  projectId:         "household-budget-8107e",
+  storageBucket:     "household-budget-8107e.firebasestorage.app",
+  messagingSenderId: "966030958183",
+  appId:             "1:966030958183:web:ac49ff11494dff985b6c89"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ── 상태 ──
+let uid = null;
+let holdings = [];     // { id, name, ticker, category, currency, avgPrice, quantity, currentPrice, memo }
+let transactions = []; // { id, holdingId, holdingName, type, price, qty, date, fee, memo }
+let currentHoldingId = null;
+let txType = 'buy';
+let holdingFilter = 'all';
+let txFilter = 'all';
+let chartInstance = null;
+let catChartInstance = null;
+let pnlChartInstance = null;
+
+// ── 색상 팔레트 ──
+const COLORS = ['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444','#06b6d4','#ec4899','#f97316','#6366f1','#14b8a6'];
+
+// ── 로그인 ──
+window.signInWithGoogle = async () => {
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch(e) { alert('로그인 실패: ' + e.message); }
+};
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    uid = user.uid;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    const av = document.getElementById('user-avatar');
+    if (user.photoURL) { av.src = user.photoURL; av.style.display = ''; }
+    await loadAll();
+  } else {
+    uid = null;
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+window.showUserMenu = () => {
+  if (confirm('로그아웃 하시겠어요?')) signOut(auth);
+};
+
+// ── Firestore ──
+const holdingsRef = () => collection(db, 'users', uid, 'investments');
+const txRef       = () => collection(db, 'users', uid, 'invest_tx');
+
+async function loadAll() {
+  const [hs, ts] = await Promise.all([
+    getDocs(query(holdingsRef(), orderBy('name'))),
+    getDocs(query(txRef(), orderBy('date', 'desc')))
+  ]);
+  holdings = hs.docs.map(d => ({ id: d.id, ...d.data() }));
+  transactions = ts.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderAll();
+}
+
+// ── 렌더 전체 ──
+function renderAll() {
+  renderSummary();
+  renderHoldings();
+  renderTransactions();
+  renderChart();
+  renderAnalysis();
+  populateHoldingSelect();
+}
+
+// ── 요약 ──
+function renderSummary() {
+  let totalInvest = 0, totalValue = 0;
+  holdings.forEach(h => {
+    const invest = (h.avgPrice || 0) * (h.quantity || 0);
+    const value  = (h.currentPrice || h.avgPrice || 0) * (h.quantity || 0);
+    totalInvest += invest;
+    totalValue  += value;
+  });
+  const pnl  = totalValue - totalInvest;
+  const rate = totalInvest > 0 ? pnl / totalInvest * 100 : 0;
+  const sign = pnl >= 0 ? '+' : '';
+  const cls  = pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : 'neu';
+
+  document.getElementById('total-value').textContent   = fmt(totalValue);
+  document.getElementById('total-invest').textContent  = fmt(totalInvest);
+  document.getElementById('holding-count').textContent = holdings.length + '개';
+  document.getElementById('total-pnl').textContent     = sign + fmt(pnl);
+  document.getElementById('total-pnl').className       = 'summary-item-value ' + cls;
+  document.getElementById('total-rate').textContent    = sign + rate.toFixed(2) + '%';
+  document.getElementById('total-rate').className      = 'summary-item-value ' + cls;
+}
+
+// ── 보유 종목 ──
+function renderHoldings() {
+  const list = document.getElementById('holdings-list');
+  const filtered = holdings.filter(h => holdingFilter === 'all' || h.category === holdingFilter);
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state">
+      <span class="material-icons-round">inbox</span>
+      <h3>보유 종목이 없어요</h3>
+      <p>+ 버튼으로 첫 종목을 추가하세요</p>
+    </div>`; return;
+  }
+  list.innerHTML = filtered.map(h => {
+    const invest = (h.avgPrice || 0) * (h.quantity || 0);
+    const value  = (h.currentPrice || h.avgPrice || 0) * (h.quantity || 0);
+    const pnl    = value - invest;
+    const rate   = invest > 0 ? pnl / invest * 100 : 0;
+    const sign   = pnl >= 0 ? '+' : '';
+    const color  = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text2)';
+    const cur    = h.currency === 'USD' ? '$' : '₩';
+    const tagCls = { stock:'tag-stock', etf:'tag-etf', crypto:'tag-crypto', other:'tag-other' }[h.category] || 'tag-other';
+    const tagTxt = { stock:'주식', etf:'ETF', crypto:'코인', other:'기타' }[h.category] || '기타';
+    const letter = (h.name || '?')[0];
+    const bg = COLORS[Math.abs(hashCode(h.id)) % COLORS.length];
+    return `<div class="holding-item" onclick="openDetail('${h.id}')">
+      <div class="holding-icon" style="background:${bg}20; color:${bg}">${letter}</div>
+      <div class="holding-info">
+        <div class="holding-name">${h.name}${h.ticker ? ' <span style="color:var(--text3);font-weight:500;font-size:12px">${h.ticker}</span>' : ''}</div>
+        <div class="holding-sub">${h.quantity}주 · 평균 ${cur}${numFmt(h.avgPrice || 0)}</div>
+        <span class="tag ${tagCls}">${tagTxt}</span>
+      </div>
+      <div class="holding-right">
+        <div class="holding-value">${cur}${numFmt(value)}</div>
+        <div class="holding-pnl" style="color:${color}">${sign}${cur}${numFmt(pnl)} (${sign}${rate.toFixed(2)}%)</div>
+      </div>
+    </div>`;
+  }).join('');
+  // ticker 치환
+  list.querySelectorAll('.holding-info').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/\$\{h\.ticker\}/g, '');
+  });
+}
+
+// ── 거래 내역 ──
+function renderTransactions(filterList) {
+  const list = document.getElementById('tx-list');
+  let arr = filterList || transactions;
+  if (txFilter !== 'all') arr = arr.filter(t => t.type === txFilter);
+  if (!arr.length) {
+    list.innerHTML = `<div class="empty-state">
+      <span class="material-icons-round">receipt_long</span>
+      <h3>거래 내역이 없어요</h3>
+    </div>`; return;
+  }
+  list.innerHTML = arr.map(t => {
+    const isBuy = t.type === 'buy';
+    const cur = t.currency === 'USD' ? '$' : '₩';
+    const total = (t.price || 0) * (t.qty || 0);
+    return `<div class="tx-item">
+      <div class="tx-badge ${t.type}">
+        <span class="material-icons-round">${isBuy ? 'trending_up' : 'trending_down'}</span>
+      </div>
+      <div class="tx-info">
+        <div class="tx-name">${t.holdingName || '-'}</div>
+        <div class="tx-sub">${isBuy ? '매수' : '매도'} · ${t.qty}주 · ${cur}${numFmt(t.price)}/주</div>
+      </div>
+      <div class="tx-right">
+        <div class="tx-amount" style="color:${isBuy ? 'var(--red)' : 'var(--green)'}">${isBuy ? '-' : '+'}${cur}${numFmt(total)}</div>
+        <div class="tx-date">${t.date || ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 최근 5개만 대시보드에
+  const recentEl = document.getElementById('recent-tx-list');
+  const recent = transactions.slice(0, 5);
+  if (!recent.length) {
+    recentEl.innerHTML = `<div class="empty-state">
+      <span class="material-icons-round">receipt_long</span>
+      <h3>거래 내역이 없어요</h3>
+      <p>종목을 추가하면 거래 내역이 쌓여요</p>
+    </div>`;
+  } else {
+    recentEl.innerHTML = recent.map(t => {
+      const isBuy = t.type === 'buy';
+      const cur = t.currency === 'USD' ? '$' : '₩';
+      const total = (t.price||0) * (t.qty||0);
+      return `<div class="tx-item">
+        <div class="tx-badge ${t.type}">
+          <span class="material-icons-round">${isBuy ? 'trending_up' : 'trending_down'}</span>
+        </div>
+        <div class="tx-info">
+          <div class="tx-name">${t.holdingName || '-'}</div>
+          <div class="tx-sub">${isBuy ? '매수' : '매도'} · ${t.qty}주 · ${cur}${numFmt(t.price)}/주</div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount" style="color:${isBuy ? 'var(--red)' : 'var(--green)'}">${isBuy ? '-' : '+'}${cur}${numFmt(total)}</div>
+          <div class="tx-date">${t.date || ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ── 포트폴리오 차트 ──
+function renderChart() {
+  const canvas = document.getElementById('portfolio-chart');
+  const empty  = document.getElementById('chart-empty');
+  const legend = document.getElementById('chart-legend');
+  if (!holdings.length) { canvas.style.display = 'none'; empty.style.display = 'block'; legend.innerHTML = ''; return; }
+  empty.style.display = 'none'; canvas.style.display = 'block';
+
+  const data = holdings.map(h => ({ name: h.name, value: (h.currentPrice || h.avgPrice || 0) * (h.quantity || 0) }))
+    .filter(d => d.value > 0).sort((a,b) => b.value - a.value);
+  const total = data.reduce((s,d) => s+d.value, 0);
+
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(canvas, {
+    type: 'doughnut',
+    data: { labels: data.map(d=>d.name), datasets: [{ data: data.map(d=>d.value), backgroundColor: COLORS.slice(0, data.length), borderWidth: 0, hoverOffset: 6 }] },
+    options: { cutout: '65%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${pctFmt(ctx.raw/total*100)}  ${numFmt(ctx.raw)}` } } }, animation: { duration: 500 } }
+  });
+  legend.innerHTML = data.map((d,i) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${COLORS[i]}"></div>
+      <span class="legend-name">${d.name}</span>
+      <span class="legend-pct">${pctFmt(d.value/total*100)}</span>
+    </div>`).join('');
+}
+
+// ── 분석 ──
+function renderAnalysis() {
+  // 카테고리별 자산
+  const cats = { stock:0, etf:0, crypto:0, other:0 };
+  const catNames = { stock:'주식', etf:'ETF', crypto:'코인', other:'기타' };
+  const catColors = { stock:'#3b82f6', etf:'#10b981', crypto:'#f59e0b', other:'#8b5cf6' };
+  holdings.forEach(h => {
+    const v = (h.currentPrice || h.avgPrice || 0) * (h.quantity || 0);
+    cats[h.category || 'other'] += v;
+  });
+  const catTotal = Object.values(cats).reduce((a,b)=>a+b,0);
+
+  if (catChartInstance) catChartInstance.destroy();
+  const catCanvas = document.getElementById('category-chart');
+  const catData = Object.entries(cats).filter(([,v])=>v>0);
+  if (catData.length) {
+    catChartInstance = new Chart(catCanvas, {
+      type: 'doughnut',
+      data: { labels: catData.map(([k])=>catNames[k]), datasets: [{ data: catData.map(([,v])=>v), backgroundColor: catData.map(([k])=>catColors[k]), borderWidth: 0, hoverOffset: 4 }] },
+      options: { cutout: '60%', plugins: { legend: { display: false } }, animation: { duration: 400 } }
+    });
+  }
+  document.getElementById('cat-legend').innerHTML = catData.map(([k,v]) =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${catColors[k]}"></div><span class="legend-name">${catNames[k]}</span><span class="legend-pct">${pctFmt(catTotal > 0 ? v/catTotal*100 : 0)}</span></div>`
+  ).join('');
+
+  // 종목별 손익 바 차트
+  const pnlData = holdings.map(h => {
+    const invest = (h.avgPrice||0)*(h.quantity||0);
+    const value  = (h.currentPrice||h.avgPrice||0)*(h.quantity||0);
+    return { name: h.name, pnl: value - invest, rate: invest > 0 ? (value-invest)/invest*100 : 0 };
+  }).sort((a,b) => b.rate - a.rate);
+
+  if (pnlChartInstance) pnlChartInstance.destroy();
+  if (pnlData.length) {
+    pnlChartInstance = new Chart(document.getElementById('pnl-chart'), {
+      type: 'bar',
+      data: {
+        labels: pnlData.map(d=>d.name),
+        datasets: [{ label: '수익률(%)', data: pnlData.map(d=>+d.rate.toFixed(2)),
+          backgroundColor: pnlData.map(d => d.rate >= 0 ? 'rgba(16,185,129,.7)' : 'rgba(239,68,68,.7)'),
+          borderRadius: 6, borderSkipped: false }]
+      },
+      options: { indexAxis:'y', plugins:{ legend:{display:false} }, scales:{ x:{ grid:{color:'rgba(150,150,150,.08)'} }, y:{grid:{display:false}} }, animation:{duration:400} }
+    });
+  }
+
+  // 수익률 순위
+  document.getElementById('rank-list').innerHTML = pnlData.length ? `<div style="padding:4px 0">`+pnlData.map((d,i) => {
+    const color = d.rate > 0 ? 'var(--green)' : d.rate < 0 ? 'var(--red)' : 'var(--text2)';
+    const sign  = d.rate >= 0 ? '+' : '';
+    return `<div class="holding-item" style="cursor:default">
+      <div style="width:28px;height:28px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--text2)">${i+1}</div>
+      <div class="holding-info"><div class="holding-name">${d.name}</div></div>
+      <div style="font-size:16px;font-weight:800;color:${color}">${sign}${d.rate.toFixed(2)}%</div>
+    </div>`;
+  }).join('')+`</div>` : `<div class="empty-state"><span class="material-icons-round">emoji_events</span><h3>데이터가 없어요</h3></div>`;
+}
+
+// ── 종목 선택 드롭다운 ──
+function populateHoldingSelect() {
+  const sel = document.getElementById('holding-select');
+  sel.innerHTML = '<option value="">-- 새 종목 추가 --</option>' +
+    holdings.map(h => `<option value="${h.id}">${h.name}${h.ticker ? ' ('+h.ticker+')' : ''}</option>`).join('');
+}
+
+// ── 모달 ──
+window.openAddModal = () => {
+  resetForm();
+  document.getElementById('holding-select-group').style.display = holdings.length ? '' : 'none';
+  document.getElementById('add-modal').classList.add('open');
+};
+window.closeModalById = id => document.getElementById(id).classList.remove('open');
+window.closeModal = (e, id) => { if (e.target === e.currentTarget) closeModalById(id); };
+
+function resetForm() {
+  ['f-name','f-ticker','f-price','f-qty','f-fee','f-memo'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.getElementById('f-category').value = 'stock';
+  document.getElementById('f-currency').value = 'KRW';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('holding-select').value = '';
+  document.getElementById('new-holding-fields').style.display = '';
+  setTxType('buy');
+}
+
+window.setTxType = type => {
+  txType = type;
+  document.getElementById('type-buy').className  = 'seg-btn' + (type==='buy'  ? ' buy-active'  : '');
+  document.getElementById('type-sell').className = 'seg-btn' + (type==='sell' ? ' sell-active' : '');
+  document.getElementById('add-modal-title').textContent = type === 'buy' ? '매수 추가' : '매도 추가';
+};
+
+window.onHoldingSelect = () => {
+  const val = document.getElementById('holding-select').value;
+  document.getElementById('new-holding-fields').style.display = val ? 'none' : '';
+};
+
+// ── 거래 저장 ──
+window.submitTransaction = async () => {
+  const price  = parseFloat(document.getElementById('f-price').value);
+  const qty    = parseFloat(document.getElementById('f-qty').value);
+  if (!price || !qty) { alert('거래가와 수량을 입력하세요'); return; }
+
+  const selId   = document.getElementById('holding-select').value;
+  const date    = document.getElementById('f-date').value || new Date().toISOString().split('T')[0];
+  const fee     = parseFloat(document.getElementById('f-fee').value) || 0;
+  const memo    = document.getElementById('f-memo').value.trim();
+
+  let holdingId, holdingName, currency;
+  if (selId) {
+    const h = holdings.find(x => x.id === selId);
+    holdingId   = selId;
+    holdingName = h.name;
+    currency    = h.currency;
+    // 평균가/수량 업데이트
+    await updateHoldingOnTx(h, txType, price, qty);
+  } else {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { alert('종목명을 입력하세요'); return; }
+    const ticker   = document.getElementById('f-ticker').value.trim();
+    const category = document.getElementById('f-category').value;
+    currency       = document.getElementById('f-currency').value;
+    // 신규 종목 생성
+    const newH = { name, ticker, category, currency, avgPrice: price, quantity: qty, currentPrice: price, memo: '', createdAt: new Date().toISOString() };
+    const ref  = await addDoc(holdingsRef(), newH);
+    holdingId   = ref.id;
+    holdingName = name;
+    holdings.push({ id: holdingId, ...newH });
+  }
+
+  // 거래 저장
+  const txData = { holdingId, holdingName, currency, type: txType, price, qty, date, fee, memo, createdAt: new Date().toISOString() };
+  const tRef   = await addDoc(txRef(), txData);
+  transactions.unshift({ id: tRef.id, ...txData });
+
+  closeModalById('add-modal');
+  renderAll();
+};
+
+async function updateHoldingOnTx(h, type, price, qty) {
+  let newQty, newAvg;
+  if (type === 'buy') {
+    newQty = (h.quantity || 0) + qty;
+    newAvg = newQty > 0 ? ((h.avgPrice||0)*(h.quantity||0) + price*qty) / newQty : price;
+  } else {
+    newQty = Math.max(0, (h.quantity||0) - qty);
+    newAvg = h.avgPrice || price;
+  }
+  await updateDoc(doc(db, 'users', uid, 'investments', h.id), { quantity: newQty, avgPrice: newAvg });
+  const idx = holdings.findIndex(x => x.id === h.id);
+  if (idx >= 0) { holdings[idx].quantity = newQty; holdings[idx].avgPrice = newAvg; }
+}
+
+// ── 종목 상세 ──
+window.openDetail = id => {
+  currentHoldingId = id;
+  const h = holdings.find(x => x.id === id);
+  if (!h) return;
+  document.getElementById('detail-title').textContent = h.name;
+  const invest = (h.avgPrice||0)*(h.quantity||0);
+  const value  = (h.currentPrice||h.avgPrice||0)*(h.quantity||0);
+  const pnl    = value - invest;
+  const rate   = invest > 0 ? pnl/invest*100 : 0;
+  const cur    = h.currency === 'USD' ? '$' : '₩';
+  const color  = pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : 'var(--text2)';
+  const sign   = pnl >= 0 ? '+' : '';
+  const catMap = { stock:'주식', etf:'ETF', crypto:'코인', other:'기타' };
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-row"><span class="detail-key">종목명</span><span class="detail-val">${h.name}${h.ticker ? ' ('+h.ticker+')' : ''}</span></div>
+    <div class="detail-row"><span class="detail-key">분류</span><span class="detail-val">${catMap[h.category]||'기타'}</span></div>
+    <div class="detail-row"><span class="detail-key">보유 수량</span><span class="detail-val">${h.quantity}주</span></div>
+    <div class="detail-row"><span class="detail-key">평균 매수가</span><span class="detail-val">${cur}${numFmt(h.avgPrice||0)}</span></div>
+    <div class="detail-row"><span class="detail-key">현재가</span><span class="detail-val">${cur}${numFmt(h.currentPrice||h.avgPrice||0)}</span></div>
+    <div class="detail-row"><span class="detail-key">총 투자금액</span><span class="detail-val">${cur}${numFmt(invest)}</span></div>
+    <div class="detail-row"><span class="detail-key">평가금액</span><span class="detail-val">${cur}${numFmt(value)}</span></div>
+    <div class="detail-row"><span class="detail-key">평가손익</span><span class="detail-val" style="color:${color}">${sign}${cur}${numFmt(pnl)}</span></div>
+    <div class="detail-row"><span class="detail-key">수익률</span><span class="detail-val" style="color:${color}">${sign}${rate.toFixed(2)}%</span></div>
+  `;
+  document.getElementById('current-price-input').value = h.currentPrice || h.avgPrice || '';
+
+  // 해당 종목 거래 내역
+  const htx = transactions.filter(t => t.holdingId === id);
+  document.getElementById('detail-tx-list').innerHTML = htx.length ? `
+    <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;margin-top:8px">거래 내역 (${htx.length}건)</div>` +
+    htx.map(t => {
+      const isBuy = t.type==='buy', co = t.currency==='USD'?'$':'₩';
+      return `<div class="tx-item" style="padding:10px 0">
+        <div class="tx-badge ${t.type}" style="width:32px;height:32px;font-size:14px">
+          <span class="material-icons-round" style="font-size:16px">${isBuy?'trending_up':'trending_down'}</span>
+        </div>
+        <div class="tx-info">
+          <div class="tx-name">${isBuy?'매수':'매도'} · ${t.qty}주 @ ${co}${numFmt(t.price)}</div>
+          ${t.memo ? `<div class="tx-sub">${t.memo}</div>` : ''}
+        </div>
+        <div class="tx-right">
+          <div class="tx-date">${t.date||''}</div>
+        </div>
+      </div>`;
+    }).join('') : '';
+
+  document.getElementById('detail-modal').classList.add('open');
+};
+
+window.updateCurrentPrice = async () => {
+  const price = parseFloat(document.getElementById('current-price-input').value);
+  if (!price || !currentHoldingId) return;
+  await updateDoc(doc(db, 'users', uid, 'investments', currentHoldingId), { currentPrice: price });
+  const idx = holdings.findIndex(h => h.id === currentHoldingId);
+  if (idx >= 0) holdings[idx].currentPrice = price;
+  closeModalById('detail-modal');
+  renderAll();
+};
+
+window.deleteHolding = async () => {
+  if (!confirm('이 종목을 삭제하면 관련 거래 내역도 모두 사라져요. 계속할까요?')) return;
+  await deleteDoc(doc(db, 'users', uid, 'investments', currentHoldingId));
+  const txToDelete = transactions.filter(t => t.holdingId === currentHoldingId);
+  await Promise.all(txToDelete.map(t => deleteDoc(doc(db, 'users', uid, 'invest_tx', t.id))));
+  holdings = holdings.filter(h => h.id !== currentHoldingId);
+  transactions = transactions.filter(t => t.holdingId !== currentHoldingId);
+  closeModalById('detail-modal');
+  renderAll();
+};
+
+window.addTxForHolding = () => {
+  closeModalById('detail-modal');
+  resetForm();
+  document.getElementById('holding-select').value = currentHoldingId;
+  onHoldingSelect();
+  document.getElementById('add-modal').classList.add('open');
+};
+
+// ── 탭 전환 ──
+window.switchTab = id => {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'analysis') renderAnalysis();
+};
+
+// ── 필터 ──
+window.filterHoldings = (f, btn) => {
+  holdingFilter = f;
+  document.querySelectorAll('#page-holdings .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderHoldings();
+};
+window.filterTx = (f, btn) => {
+  txFilter = f;
+  document.querySelectorAll('#page-transactions .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderTransactions();
+};
+
+// ── 테마 ──
+window.toggleTheme = () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').textContent = isDark ? 'dark_mode' : 'light_mode';
+  localStorage.setItem('invest-theme', isDark ? 'light' : 'dark');
+};
+const savedTheme = localStorage.getItem('invest-theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
+}
+
+// ── 유틸 ──
+function fmt(n) {
+  if (Math.abs(n) >= 1e8) return '₩' + (n/1e8).toFixed(2) + '억';
+  if (Math.abs(n) >= 1e4) return '₩' + numFmt(Math.round(n));
+  return '₩' + numFmt(n);
+}
+function numFmt(n) { return Number(n).toLocaleString('ko-KR'); }
+function pctFmt(n) { return n.toFixed(1) + '%'; }
+function hashCode(s) { let h=0; for(let i=0;i<s.length;i++) h=(Math.imul(31,h)+s.charCodeAt(i))|0; return h; }
+
+</script>
+</body>
+</html>
