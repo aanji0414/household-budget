@@ -719,6 +719,31 @@
     }
     .api-key-status.set { color: var(--green-700); font-weight: 600; }
 
+    /* ───── YEAR FILTER ───── */
+    .year-filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 10px;
+    }
+    .year-select {
+      padding: 9px 36px 9px 14px;
+      border: 2px solid var(--slate-200);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--slate-800);
+      background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 12px center;
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .year-select:focus { border-color: var(--blue-500); }
+    .history-count { font-size: 13px; color: var(--slate-400); font-weight: 500; }
+
     /* ───── IMAGE UPLOAD ───── */
     .upload-zone {
       display: block;
@@ -1000,6 +1025,12 @@
   <div id="tab-history" class="tab-panel">
     <div class="card">
       <div class="card-title"><span class="icon">📋</span>납부 기록</div>
+      <div class="year-filter-row">
+        <select class="year-select" id="year-select" onchange="onYearChange(this.value)">
+          <option value="all">전체 연도</option>
+        </select>
+        <span class="history-count" id="history-count"></span>
+      </div>
       <div id="history-container"></div>
     </div>
   </div>
@@ -1015,9 +1046,10 @@ const DEFAULT_HOUSEHOLDS = [
   { id: 5, name: '3층',     type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
 ];
 
-let households = JSON.parse(localStorage.getItem('wc_households') || 'null') || DEFAULT_HOUSEHOLDS;
-let history    = JSON.parse(localStorage.getItem('wc_history')    || '[]');
-let lastResult = null;
+let households   = JSON.parse(localStorage.getItem('wc_households') || 'null') || DEFAULT_HOUSEHOLDS;
+let history      = JSON.parse(localStorage.getItem('wc_history')    || '[]');
+let lastResult   = null;
+let selectedYear = 'all';
 
 function save() { localStorage.setItem('wc_households', JSON.stringify(households)); }
 
@@ -1250,12 +1282,22 @@ function saveHistory() {
   if (!lastResult) return;
   if (lastResult.savedAt) { alert('이미 저장된 내역이에요.'); return; }
   lastResult.savedAt = new Date().toISOString();
-  // 세대별 납부 상태 초기화 (미납)
   const paidStatus = {};
   lastResult.results.forEach(r => { paidStatus[r.id] = false; });
-  history.unshift({ ...lastResult, paidStatus, memo: '' });
+  history.push({ ...lastResult, paidStatus, memo: '' });
+  // 납부일 기준 오름차순 정렬 (과거→현재)
+  history.sort((a, b) => {
+    const da = a.paymentDate || a.savedAt || '';
+    const db = b.paymentDate || b.savedAt || '';
+    return da.localeCompare(db);
+  });
   localStorage.setItem('wc_history', JSON.stringify(history));
   alert('💾 납부 기록이 저장되었어요!');
+}
+
+function onYearChange(val) {
+  selectedYear = val;
+  renderHistory();
 }
 
 function togglePaid(idx, hid) {
@@ -1282,14 +1324,37 @@ function renderHistory() {
     return;
   }
 
-  // 연도별 그룹화
+  // 연도 목록 추출 및 드롭다운 업데이트
+  const allYears = [...new Set(history.map(getYear))].sort((a, b) => b - a);
+  const sel = document.getElementById('year-select');
+  if (sel) {
+    const cur = sel.value;
+    sel.innerHTML = '<option value="all">전체 연도</option>' +
+      allYears.map(y => `<option value="${y}" ${y === cur ? 'selected' : ''}>${y}년</option>`).join('');
+    if (selectedYear !== 'all' && allYears.includes(selectedYear)) sel.value = selectedYear;
+  }
+
+  // 선택된 연도 필터링
+  const filtered = selectedYear === 'all'
+    ? history.map((entry, i) => ({ entry, i }))
+    : history.map((entry, i) => ({ entry, i })).filter(({ entry }) => getYear(entry) === selectedYear);
+
+  const countEl = document.getElementById('history-count');
+  if (countEl) countEl.textContent = `총 ${filtered.length}건`;
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">${selectedYear === 'all' ? '아직 저장된 납부 기록이 없어요.' : selectedYear + '년 기록이 없어요.'}</div></div>`;
+    return;
+  }
+
+  // 연도별 그룹화 (필터된 항목만)
   const grouped = {};
-  history.forEach((entry, i) => {
+  filtered.forEach(({ entry, i }) => {
     const y = getYear(entry);
     if (!grouped[y]) grouped[y] = [];
     grouped[y].push({ entry, i });
   });
-  const years = Object.keys(grouped).sort((a, b) => b - a);
+  const years = Object.keys(grouped).sort((a, b) => a - b); // 오름차순 (과거→현재)
 
   container.innerHTML = years.map(year => `
     <div class="year-header">📅 ${year}년</div>
