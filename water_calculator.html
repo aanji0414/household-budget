@@ -602,6 +602,189 @@
     }
     .s-chip strong { color: var(--slate-900); font-size: 14px; font-weight: 700; display: block; margin-top: 1px; }
 
+    /* ───── API KEY ───── */
+    .api-key-section {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 1px solid #86efac;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+    .api-key-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green-700);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .api-key-row { display: flex; gap: 8px; align-items: center; }
+    .api-key-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #86efac;
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      color: var(--slate-800);
+      background: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .api-key-input:focus { border-color: var(--green-500); }
+    .api-key-save-btn {
+      padding: 10px 16px;
+      background: var(--green-500);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .api-key-save-btn:hover { background: var(--green-700); }
+    .api-key-status {
+      font-size: 12px;
+      margin-top: 6px;
+      color: var(--slate-500);
+    }
+    .api-key-status.set { color: var(--green-700); font-weight: 600; }
+
+    /* ───── IMAGE UPLOAD ───── */
+    .upload-zone {
+      border: 2px dashed var(--blue-300, #93c5fd);
+      border-radius: 14px;
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--blue-50);
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--blue-500);
+      background: var(--blue-100);
+    }
+    .upload-zone input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-title { font-size: 15px; font-weight: 700; color: var(--blue-700); margin-bottom: 4px; }
+    .upload-sub { font-size: 12px; color: var(--slate-500); }
+    .upload-preview {
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .upload-preview img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+      background: var(--slate-100);
+      border-radius: 12px;
+      display: block;
+    }
+    .upload-preview-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .extract-btn {
+      flex: 1;
+      padding: 14px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(5,150,105,0.35);
+      transition: all 0.2s;
+    }
+    .extract-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(5,150,105,0.4); }
+    .extract-btn:disabled { background: var(--slate-300); box-shadow: none; transform: none; cursor: not-allowed; }
+    .remove-img-btn {
+      padding: 14px 18px;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .remove-img-btn:hover { background: var(--red-100); color: var(--red-500); border-color: #fca5a5; }
+
+    /* 추출 상태 */
+    .extract-status {
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .extract-status.loading {
+      display: flex;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      color: var(--blue-700);
+    }
+    .extract-status.success {
+      display: flex;
+      background: var(--green-100);
+      border: 1px solid #86efac;
+      color: var(--green-700);
+    }
+    .extract-status.error {
+      display: flex;
+      background: var(--red-100);
+      border: 1px solid #fca5a5;
+      color: var(--red-700);
+    }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 3px solid var(--blue-200);
+      border-top-color: var(--blue-600);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      color: var(--slate-400);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .or-divider::before, .or-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--slate-200);
+    }
+
     @media (max-width: 480px) {
       .header h1 { font-size: 26px; }
       .form-row { flex-direction: column; }
@@ -637,8 +820,19 @@
   <!-- ── 세대 설정 ── -->
   <div id="tab-settings" class="tab-panel active">
     <div class="card">
+      <div class="card-title"><span class="icon">🔑</span>Gemini API 키 설정</div>
+      <div class="api-key-section">
+        <div class="api-key-label">🤖 Google Gemini API Key</div>
+        <div class="api-key-row">
+          <input class="api-key-input" type="password" id="api-key-input" placeholder="AIzaSy...">
+          <button class="api-key-save-btn" onclick="saveApiKey()">저장</button>
+        </div>
+        <div class="api-key-status" id="api-key-status">API 키를 입력하면 고지서 이미지에서 자동으로 금액을 추출할 수 있어요.</div>
+      </div>
+    </div>
+    <div class="card">
       <div class="card-title"><span class="icon">🏠</span>세대 구성 설정</div>
-      <div class="info-box">
+      <div class="info-box" style="margin-top:0">
         세대 이름을 클릭해 수정할 수 있어요.<br>
         <strong>고정 금액</strong> 세대는 인원 계산 없이 설정한 금액만 납부해요.<br>
         <strong>기초수급</strong> 토글을 켜면 해당 세대에만 할인이 적용돼요 (1세대만 지정 가능).
@@ -651,6 +845,31 @@
   <div id="tab-calc" class="tab-panel">
     <div class="card">
       <div class="card-title"><span class="icon">📄</span>고지서 정보 입력</div>
+
+      <!-- 이미지 업로드 영역 -->
+      <div id="upload-zone" class="upload-zone"
+        ondragover="event.preventDefault(); this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleDrop(event)">
+        <input type="file" accept="image/*" onchange="handleFileSelect(event)">
+        <div class="upload-icon">📷</div>
+        <div class="upload-title">고지서 이미지 업로드</div>
+        <div class="upload-sub">클릭하거나 이미지를 드래그해서 올려주세요 · JPG, PNG, HEIC</div>
+      </div>
+
+      <div id="upload-preview" style="display:none">
+        <div class="upload-preview">
+          <img id="preview-img" src="" alt="고지서 미리보기">
+        </div>
+        <div class="upload-preview-actions">
+          <button class="extract-btn" id="extract-btn" onclick="extractFromImage()">🤖 AI로 자동 추출하기</button>
+          <button class="remove-img-btn" onclick="removeImage()">✕</button>
+        </div>
+      </div>
+
+      <div class="extract-status" id="extract-status"></div>
+
+      <div class="or-divider">또는 직접 입력</div>
 
       <div class="form-row">
         <div class="form-group">
@@ -1001,8 +1220,157 @@ function deleteHistory(i) {
   renderHistory();
 }
 
+// ── API 키 ──
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) { alert('API 키를 입력해주세요.'); return; }
+  if (!key.startsWith('AIza')) { alert('올바른 Gemini API 키 형식이 아니에요.\nAIza로 시작하는 키를 입력해주세요.'); return; }
+  localStorage.setItem('wc_gemini_key', key);
+  document.getElementById('api-key-input').value = '';
+  updateApiKeyStatus();
+  alert('✅ API 키가 저장되었어요!');
+}
+
+function updateApiKeyStatus() {
+  const key = localStorage.getItem('wc_gemini_key');
+  const el  = document.getElementById('api-key-status');
+  if (!el) return;
+  if (key) {
+    el.textContent = '✅ API 키 설정됨 — 이미지 자동 추출 기능을 사용할 수 있어요.';
+    el.className = 'api-key-status set';
+  } else {
+    el.textContent = 'API 키를 입력하면 고지서 이미지에서 자동으로 금액을 추출할 수 있어요.';
+    el.className = 'api-key-status';
+  }
+}
+
+// ── 이미지 처리 ──
+let currentImageBase64 = null;
+let currentImageMime   = null;
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (file) loadImageFile(file);
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadImageFile(file);
+}
+
+function loadImageFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+    const base64  = dataUrl.split(',')[1];
+    currentImageBase64 = base64;
+    currentImageMime   = file.type || 'image/jpeg';
+
+    document.getElementById('preview-img').src = dataUrl;
+    document.getElementById('upload-zone').style.display    = 'none';
+    document.getElementById('upload-preview').style.display = 'block';
+    document.getElementById('extract-status').style.display = 'none';
+    document.getElementById('extract-status').className     = 'extract-status';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  currentImageBase64 = null;
+  currentImageMime   = null;
+  document.getElementById('preview-img').src              = '';
+  document.getElementById('upload-zone').style.display    = 'block';
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('extract-status').style.display = 'none';
+  document.getElementById('extract-status').className     = 'extract-status';
+}
+
+// ── Gemini 자동 추출 ──
+async function extractFromImage() {
+  const apiKey = localStorage.getItem('wc_gemini_key');
+  if (!apiKey) {
+    alert('Gemini API 키가 설정되지 않았어요.\n세대 설정 탭에서 API 키를 먼저 입력해주세요.');
+    return;
+  }
+  if (!currentImageBase64) return;
+
+  const btn    = document.getElementById('extract-btn');
+  const status = document.getElementById('extract-status');
+
+  btn.disabled    = true;
+  btn.textContent = '추출 중...';
+  status.className   = 'extract-status loading';
+  status.style.display = 'flex';
+  status.innerHTML = '<div class="spinner"></div> Gemini AI가 고지서를 분석하고 있어요...';
+
+  const prompt = `이 수도요금 고지서 이미지를 분석해서 아래 정보를 추출해줘.
+반드시 JSON 형식으로만 답해줘. 다른 설명 없이 JSON만.
+
+{
+  "totalAmount": 납부할금액(할인 후 실제 납부액, 원 단위 숫자만),
+  "totalDiscount": 총할인금액(감면액 합계, 원 단위 숫자만, 없으면 0),
+  "periodStart": "사용기간 시작 YYYY-MM",
+  "periodEnd": "사용기간 종료 YYYY-MM",
+  "paymentDate": "납부기한 또는 납부일 YYYY-MM-DD"
+}
+
+금액은 쉼표나 원 기호 없이 숫자만. 날짜를 찾을 수 없으면 null.`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: currentImageMime, data: currentImageBase64 } },
+              { text: prompt }
+            ]
+          }],
+          generationConfig: { temperature: 0, maxOutputTokens: 512 }
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // JSON 파싱 (마크다운 코드블록 제거)
+    const jsonStr = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const parsed  = JSON.parse(jsonStr);
+
+    // 폼 자동 입력
+    if (parsed.totalAmount)   document.getElementById('total-amount').value   = parsed.totalAmount;
+    if (parsed.totalDiscount !== undefined) document.getElementById('total-discount').value = parsed.totalDiscount;
+    if (parsed.periodStart)   document.getElementById('period-start').value   = parsed.periodStart;
+    if (parsed.periodEnd)     document.getElementById('period-end').value     = parsed.periodEnd;
+    if (parsed.paymentDate)   document.getElementById('payment-date').value   = parsed.paymentDate;
+
+    status.className = 'extract-status success';
+    status.innerHTML = '✅ 자동 추출 완료! 아래 내용을 확인하고 계산하기를 눌러주세요.';
+
+  } catch (e) {
+    console.error(e);
+    status.className = 'extract-status error';
+    status.innerHTML = `⚠️ 추출 실패: ${e.message}<br><span style="font-weight:400">직접 금액을 입력해주세요.</span>`;
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '🤖 AI로 자동 추출하기';
+  }
+}
+
 // ── 초기화 ──
 renderHouseholds();
+updateApiKeyStatus();
 
 const today = new Date();
 document.getElementById('payment-date').value = today.toISOString().slice(0, 10);
