@@ -828,8 +828,6 @@
           <button class="api-key-save-btn" onclick="saveApiKey()">저장</button>
         </div>
         <div class="api-key-status" id="api-key-status">API 키를 입력하면 고지서 이미지에서 자동으로 금액을 추출할 수 있어요.</div>
-        <button class="api-key-save-btn" style="margin-top:8px;background:#6366f1;width:100%" onclick="listModels()">🔍 사용 가능한 모델 확인</button>
-        <pre id="model-list" style="display:none;margin-top:10px;background:#1e293b;color:#94a3b8;padding:12px;border-radius:8px;font-size:11px;overflow:auto;max-height:200px"></pre>
       </div>
     </div>
     <div class="card">
@@ -1232,28 +1230,6 @@ function saveApiKey() {
   alert('✅ API 키가 저장되었어요!');
 }
 
-async function listModels() {
-  const apiKey = localStorage.getItem('wc_gemini_key');
-  if (!apiKey) { alert('API 키를 먼저 저장해주세요.'); return; }
-  const el = document.getElementById('model-list');
-  el.style.display = 'block';
-  el.textContent = '조회 중...';
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models`,
-      { headers: { 'x-goog-api-key': apiKey } }
-    );
-    const data = await res.json();
-    const names = (data.models || [])
-      .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
-      .map(m => m.name);
-    el.textContent = names.length
-      ? 'generateContent 지원 모델:\n' + names.join('\n')
-      : JSON.stringify(data, null, 2);
-  } catch(e) {
-    el.textContent = '오류: ' + e.message;
-  }
-}
 
 function updateApiKeyStatus() {
   const key = localStorage.getItem('wc_gemini_key');
@@ -1344,7 +1320,7 @@ async function extractFromImage() {
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
