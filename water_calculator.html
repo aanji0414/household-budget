@@ -1332,7 +1332,7 @@ async function extractFromImage() {
               { text: prompt }
             ]
           }],
-          generationConfig: { temperature: 0, maxOutputTokens: 512 }
+          generationConfig: { temperature: 0, maxOutputTokens: 1024, responseMimeType: 'application/json' }
         })
       }
     );
