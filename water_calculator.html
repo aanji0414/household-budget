@@ -1344,9 +1344,10 @@ async function extractFromImage() {
     const data = await res.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
-    // JSON 파싱 (마크다운 코드블록 제거)
-    const jsonStr = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const parsed  = JSON.parse(jsonStr);
+    // 응답에서 JSON 객체 부분만 추출
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('고지서에서 금액 정보를 찾지 못했어요. 이미지가 선명한지 확인해주세요.');
+    const parsed = JSON.parse(match[0]);
 
     // 폼 자동 입력
     if (parsed.totalAmount)   document.getElementById('total-amount').value   = parsed.totalAmount;
