@@ -1390,7 +1390,7 @@ function importPastRecords() {
     const results = [fixedResult, ...personResults];
 
     const paidStatus = {};
-    results.forEach(r => { paidStatus[r.id] = true; });
+    results.forEach(r => { paidStatus[r.id] = false; });
 
     return { totalPaid, totalDiscount, periodStart: pStart, periodEnd: pEnd, paymentDate: payDate, results, paidStatus, memo, savedAt: new Date(payDate).toISOString() };
   }
