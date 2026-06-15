@@ -1259,6 +1259,7 @@ function saveHistory() {
 }
 
 function togglePaid(idx, hid) {
+  if (!history[idx].paidStatus) history[idx].paidStatus = {};
   history[idx].paidStatus[hid] = !history[idx].paidStatus[hid];
   localStorage.setItem('wc_history', JSON.stringify(history));
   renderHistory();
