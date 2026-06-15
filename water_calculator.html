@@ -490,15 +490,23 @@
     }
 
     /* ───── HISTORY ───── */
+    .year-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-400);
+      letter-spacing: 1px;
+      padding: 8px 4px 4px;
+      margin-top: 8px;
+      border-bottom: 1px solid var(--slate-200);
+      margin-bottom: 8px;
+    }
     .history-list { display: flex; flex-direction: column; gap: 10px; }
     .h-item {
       border: 1px solid var(--slate-200);
       border-radius: 14px;
       padding: 16px 18px;
       background: var(--slate-50);
-      transition: all 0.2s;
     }
-    .h-item:hover { border-color: var(--blue-300, #93c5fd); background: var(--blue-50); }
     .h-top {
       display: flex;
       justify-content: space-between;
@@ -520,7 +528,64 @@
       display: flex; align-items: center; justify-content: center;
     }
     .del-btn:hover { background: var(--red-100); color: var(--red-500); }
-    .h-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* 세대별 납부 체크 */
+    .h-households { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .h-household-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+    .h-household-info { display: flex; align-items: center; gap: 8px; }
+    .h-hname { font-size: 13px; font-weight: 600; color: var(--slate-800); }
+    .h-hamount { font-size: 13px; font-weight: 700; color: var(--blue-700); }
+    .h-household-row.is-sub .h-hamount { color: var(--amber-600); }
+    .h-household-row.is-fixed .h-hamount { color: #6d28d9; }
+    .pay-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--slate-200);
+      background: white;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-400);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .pay-toggle.paid {
+      background: var(--green-100);
+      border-color: #86efac;
+      color: var(--green-700);
+    }
+
+    /* 메모 */
+    .h-memo-wrap { margin-top: 10px; }
+    .h-memo {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--slate-700);
+      background: white;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 48px;
+      line-height: 1.5;
+    }
+    .h-memo:focus { border-color: var(--blue-400); }
+    .h-memo::placeholder { color: var(--slate-300); }
+
     .h-chip {
       background: white;
       border: 1px solid var(--slate-200);
@@ -875,11 +940,11 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">사용기간 시작</label>
-          <input class="form-input" type="month" id="period-start">
+          <input class="form-input" type="date" id="period-start">
         </div>
         <div class="form-group">
           <label class="form-label">사용기간 종료</label>
-          <input class="form-input" type="month" id="period-end">
+          <input class="form-input" type="date" id="period-end">
         </div>
       </div>
 
@@ -1055,11 +1120,21 @@ function switchTab(tab, btn) {
 // ── 숫자 포맷 ──
 function fmt(n) { return n.toLocaleString('ko-KR') + '원'; }
 
+function fmtDate(d) {
+  if (!d) return '';
+  return d.replace(/-/g, '.');
+}
+
 function fmtPeriod(start, end) {
   if (!start) return '기간 미입력';
-  const s = start.replace('-', '년 ') + '월';
-  const e = end && end !== start ? ' ~ ' + end.replace('-', '년 ') + '월' : '';
+  const s = fmtDate(start);
+  const e = end && end !== start ? ' ~ ' + fmtDate(end) : '';
   return s + e;
+}
+
+function getYear(entry) {
+  const d = entry.periodStart || entry.savedAt || '';
+  return d.slice(0, 4) || '기타';
 }
 
 // ── 계산 ──
@@ -1175,9 +1250,23 @@ function saveHistory() {
   if (!lastResult) return;
   if (lastResult.savedAt) { alert('이미 저장된 내역이에요.'); return; }
   lastResult.savedAt = new Date().toISOString();
-  history.unshift({ ...lastResult });
+  // 세대별 납부 상태 초기화 (미납)
+  const paidStatus = {};
+  lastResult.results.forEach(r => { paidStatus[r.id] = false; });
+  history.unshift({ ...lastResult, paidStatus, memo: '' });
   localStorage.setItem('wc_history', JSON.stringify(history));
   alert('💾 납부 기록이 저장되었어요!');
+}
+
+function togglePaid(idx, hid) {
+  history[idx].paidStatus[hid] = !history[idx].paidStatus[hid];
+  localStorage.setItem('wc_history', JSON.stringify(history));
+  renderHistory();
+}
+
+function saveMemo(idx, val) {
+  history[idx].memo = val;
+  localStorage.setItem('wc_history', JSON.stringify(history));
 }
 
 // ── 기록 렌더 ──
@@ -1191,27 +1280,54 @@ function renderHistory() {
       </div>`;
     return;
   }
-  container.innerHTML = `<div class="history-list">${history.map((entry, i) => `
-    <div class="h-item">
-      <div class="h-top">
-        <div>
-          <div class="h-period">${fmtPeriod(entry.periodStart, entry.periodEnd)}</div>
-          <div class="h-date">납부일 ${entry.paymentDate || '미입력'} · 저장 ${new Date(entry.savedAt).toLocaleDateString('ko-KR')}</div>
-        </div>
-        <div class="h-right">
-          <div class="h-amount">${fmt(entry.totalPaid)}</div>
-          <button class="del-btn" onclick="deleteHistory(${i})" title="삭제">✕</button>
-        </div>
-      </div>
-      <div class="h-chips">
-        ${entry.results.map(r => {
-          const chipClass = r.type === 'fixed' ? 'fixed' : (r.isSubsidy ? 'sub' : '');
-          const label = r.type === 'fixed' ? '고정' : `${r.people}명`;
-          return `<span class="h-chip ${chipClass}">${r.name} ${label} · ${fmt(r.finalAmount)}</span>`;
-        }).join('')}
-      </div>
+
+  // 연도별 그룹화
+  const grouped = {};
+  history.forEach((entry, i) => {
+    const y = getYear(entry);
+    if (!grouped[y]) grouped[y] = [];
+    grouped[y].push({ entry, i });
+  });
+  const years = Object.keys(grouped).sort((a, b) => b - a);
+
+  container.innerHTML = years.map(year => `
+    <div class="year-header">📅 ${year}년</div>
+    <div class="history-list">
+      ${grouped[year].map(({ entry, i }) => {
+        const paidStatus = entry.paidStatus || {};
+        const allPaid = entry.results.length > 0 && entry.results.every(r => paidStatus[r.id]);
+        const householdsHtml = entry.results.map(r => {
+          const isPaid = !!paidStatus[r.id];
+          const rowClass = r.type === 'fixed' ? 'is-fixed' : (r.isSubsidy ? 'is-sub' : '');
+          const label = r.type === 'fixed' ? '고정' : r.people + '명';
+          return `
+            <div class="h-household-row ${rowClass}">
+              <div class="h-household-info">
+                <span class="h-hname">${r.name} <span style="font-weight:400;color:var(--slate-400);font-size:11px">${label}</span></span>
+                <span class="h-hamount">${fmt(r.finalAmount)}</span>
+              </div>
+              <button class="pay-toggle ${isPaid ? 'paid' : ''}" onclick="togglePaid(${i}, ${r.id})">
+                ${isPaid ? '✅ 납부' : '⬜ 미납'}
+              </button>
+            </div>`;
+        }).join('');
+        return `
+          <div class="h-item">
+            <div class="h-top">
+              <div>
+                <div class="h-period">${fmtPeriod(entry.periodStart, entry.periodEnd)}${allPaid ? ' <span style="font-size:11px;background:#dcfce7;color:#15803d;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:4px">전체 납부완료</span>' : ''}</div>
+                <div class="h-date">납부일 ${entry.paymentDate || '미입력'} · 총 ${fmt(entry.totalPaid)}</div>
+              </div>
+              <button class="del-btn" onclick="deleteHistory(${i})" title="삭제">✕</button>
+            </div>
+            <div class="h-households">${householdsHtml}</div>
+            <div class="h-memo-wrap">
+              <textarea class="h-memo" rows="2" placeholder="메모 (이사, 변동사항 등...)" onchange="saveMemo(${i}, this.value)">${entry.memo || ''}</textarea>
+            </div>
+          </div>`;
+      }).join('')}
     </div>
-  `).join('')}</div>`;
+  `).join('');
 }
 
 function deleteHistory(i) {
@@ -1375,11 +1491,13 @@ renderHouseholds();
 updateApiKeyStatus();
 
 const today = new Date();
-document.getElementById('payment-date').value = today.toISOString().slice(0, 10);
-const prev = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-const prevStr = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
-document.getElementById('period-start').value = prevStr;
-document.getElementById('period-end').value   = prevStr;
+const todayStr = today.toISOString().slice(0, 10);
+document.getElementById('payment-date').value = todayStr;
+// 사용기간 기본값: 전전달 1일 ~ 전달 말일 (2개월 고지 기준)
+const p1 = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+const p2 = new Date(today.getFullYear(), today.getMonth(), 0);
+document.getElementById('period-start').value = p1.toISOString().slice(0, 10);
+document.getElementById('period-end').value   = p2.toISOString().slice(0, 10);
 </script>
 </body>
 </html>
