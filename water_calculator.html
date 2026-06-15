@@ -847,15 +847,15 @@
       <div class="card-title"><span class="icon">📄</span>고지서 정보 입력</div>
 
       <!-- 이미지 업로드 영역 -->
-      <div id="upload-zone" class="upload-zone"
+      <label for="bill-file-input" id="upload-zone" class="upload-zone"
         ondragover="event.preventDefault(); this.classList.add('drag-over')"
         ondragleave="this.classList.remove('drag-over')"
         ondrop="handleDrop(event)">
-        <input type="file" accept="image/*" onchange="handleFileSelect(event)">
+        <input type="file" id="bill-file-input" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
         <div class="upload-icon">📷</div>
         <div class="upload-title">고지서 이미지 업로드</div>
         <div class="upload-sub">클릭하거나 이미지를 드래그해서 올려주세요 · JPG, PNG, HEIC</div>
-      </div>
+      </label>
 
       <div id="upload-preview" style="display:none">
         <div class="upload-preview">
