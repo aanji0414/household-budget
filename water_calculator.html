@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💧 수도세 계산기</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+    :root {
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --blue-200: #bfdbfe;
+      --blue-400: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-700: #1d4ed8;
+      --blue-900: #1e3a8a;
+      --cyan-400: #22d3ee;
+      --cyan-500: #06b6d4;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --amber-100: #fef3c7;
+      --amber-200: #fde68a;
+      --amber-400: #fbbf24;
+      --amber-500: #f59e0b;
+      --amber-600: #d97706;
+      --green-100: #dcfce7;
+      --green-500: #22c55e;
+      --green-700: #15803d;
+      --red-100: #fee2e2;
+      --red-500: #ef4444;
+      --red-700: #b91c1c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      color: var(--slate-900);
+    }
+
+    /* ───── HEADER ───── */
+    .header {
+      background: linear-gradient(145deg, #1e3a8a 0%, #1e40af 40%, #0369a1 100%);
+      padding: 40px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(96,165,250,0.25) 0%, transparent 70%);
+    }
+    .header-content { position: relative; z-index: 1; }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .header h1 {
+      color: white;
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: rgba(255,255,255,0.75);
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .header-wave {
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 32px;
+      background: #f0f4ff;
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    /* ───── LAYOUT ───── */
+    .main {
+      max-width: 680px;
+      margin: -20px auto 0;
+      padding: 0 16px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ───── TABS ───── */
+    .tabs {
+      display: flex;
+      background: white;
+      border-radius: 18px;
+      padding: 6px;
+      box-shadow: 0 8px 32px rgba(30,64,175,0.12);
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 11px 8px;
+      border: none;
+      background: transparent;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--slate-500);
+      transition: all 0.2s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .tab-btn:hover:not(.active) { background: var(--slate-100); color: var(--slate-700); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #1e40af, #0369a1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30,64,175,0.35);
+    }
+
+    /* ───── CARDS ───── */
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 24px rgba(30,64,175,0.07);
+      margin-bottom: 16px;
+      border: 1px solid rgba(30,64,175,0.06);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title .icon {
+      width: 32px; height: 32px;
+      background: var(--blue-50);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    /* ───── INFO BOX ───── */
+    .info-box {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid var(--blue-200);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--blue-700);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .info-box strong { font-weight: 700; }
+
+    /* ───── HOUSEHOLD CARDS ───── */
+    .household-list { display: flex; flex-direction: column; gap: 10px; }
+    .household-card {
+      border: 2px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.2s;
+      background: var(--slate-50);
+    }
+    .household-card:hover { border-color: var(--blue-300, #93c5fd); }
+    .household-card.subsidy {
+      border-color: var(--amber-400);
+      background: linear-gradient(135deg, #fffbeb, #fefce8);
+    }
+    .household-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .household-name-wrap { display: flex; align-items: center; gap: 8px; }
+    .household-num {
+      width: 24px; height: 24px;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .household-card.subsidy .household-num { background: var(--amber-200); color: var(--amber-600); }
+    .household-card.fixed-type { border-color: #c4b5fd; background: linear-gradient(135deg, #f5f3ff, #ede9fe); }
+    .household-card.fixed-type .household-num { background: #ddd6fe; color: #6d28d9; }
+    .household-name-input {
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--slate-800);
+      font-family: inherit;
+      width: 110px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .household-name-input:focus {
+      outline: none;
+      background: white;
+      box-shadow: 0 0 0 2px var(--blue-400);
+    }
+    .subsidy-badge {
+      background: linear-gradient(135deg, var(--amber-500), var(--amber-400));
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .household-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .people-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .people-label { font-size: 13px; color: var(--slate-500); font-weight: 500; }
+    .people-counter {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: white;
+      border: 2px solid var(--slate-200);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .cnt-btn {
+      width: 34px; height: 34px;
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      font-weight: 300;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-600);
+      transition: all 0.15s;
+      font-family: inherit;
+      line-height: 1;
+    }
+    .cnt-btn:hover { background: var(--blue-500); color: white; }
+    .cnt-val {
+      min-width: 36px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--slate-900);
+      border-left: 1px solid var(--slate-200);
+      border-right: 1px solid var(--slate-200);
+      padding: 0 4px;
+    }
+    .subsidy-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .subsidy-label-txt { font-size: 12px; color: var(--slate-500); font-weight: 500; }
+    .toggle {
+      width: 40px; height: 22px;
+      background: var(--slate-200);
+      border-radius: 11px;
+      position: relative;
+      transition: background 0.25s;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: linear-gradient(90deg, var(--amber-500), var(--amber-400)); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 2px; left: 2px;
+      transition: left 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .toggle.on::after { left: 20px; }
+
+    /* ───── FORM ───── */
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+      margin-bottom: 7px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--slate-900);
+      transition: all 0.2s;
+      outline: none;
+      background: var(--slate-50);
+    }
+    .form-input:focus { border-color: var(--blue-500); background: white; box-shadow: 0 0 0 4px rgba(59,130,246,0.08); }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; min-width: 0; }
+    .input-wrap { position: relative; }
+    .input-unit {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--slate-400);
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .input-wrap .form-input { padding-right: 36px; text-align: right; }
+
+    /* ───── BUTTON ───── */
+    .primary-btn {
+      width: 100%;
+      padding: 17px;
+      background: linear-gradient(135deg, #1e40af, #0369a1);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 20px rgba(30,64,175,0.35);
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(30,64,175,0.45); }
+    .primary-btn:active { transform: translateY(0); box-shadow: 0 4px 14px rgba(30,64,175,0.3); }
+    .secondary-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 2px solid var(--slate-200);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 12px;
+      transition: all 0.2s;
+    }
+    .secondary-btn:hover { background: var(--slate-200); }
+
+    /* ───── RESULT ───── */
+    .result-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .result-period-label {
+      font-size: 13px;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+    .result-total-badge {
+      background: linear-gradient(135deg, #1e40af, #0369a1);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .result-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+    }
+    .result-table thead th {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 0 14px 8px;
+      text-align: left;
+    }
+    .result-table thead th:last-child { text-align: right; }
+    .r-row td {
+      padding: 13px 14px;
+      background: var(--slate-50);
+      font-size: 14px;
+    }
+    .r-row td:first-child { border-radius: 10px 0 0 10px; }
+    .r-row td:last-child { border-radius: 0 10px 10px 0; text-align: right; font-weight: 700; font-size: 15px; color: var(--blue-700); }
+    .r-row.subsidy-row td { background: #fffbeb; }
+    .r-row.subsidy-row td:last-child { color: var(--amber-600); }
+    .r-row .name-cell { font-weight: 600; }
+    .r-row .sub-note { font-size: 11px; color: var(--amber-500); font-weight: 600; margin-top: 2px; }
+    .r-row .people-cell { text-align: center; color: var(--slate-600); }
+    .r-row .ratio-cell { text-align: center; min-width: 70px; }
+    .ratio-pill {
+      display: inline-block;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .r-row.subsidy-row .ratio-pill { background: var(--amber-100); color: var(--amber-600); }
+    .total-row td {
+      padding: 14px;
+      border-top: 2px solid var(--slate-200);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .total-row td:last-child { text-align: right; color: var(--blue-700); font-size: 17px; }
+
+    /* ───── VALIDATION ───── */
+    .v-ok {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--green-100);
+      border: 1px solid #86efac;
+      color: var(--green-700);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px; font-weight: 600;
+      margin-top: 16px;
+    }
+    .v-err {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--red-100);
+      border: 1px solid #fca5a5;
+      color: var(--red-700);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px; font-weight: 600;
+      margin-top: 16px;
+    }
+
+    /* ───── HISTORY ───── */
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .h-item {
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: var(--slate-50);
+      transition: all 0.2s;
+    }
+    .h-item:hover { border-color: var(--blue-300, #93c5fd); background: var(--blue-50); }
+    .h-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .h-period { font-size: 14px; font-weight: 700; color: var(--slate-800); }
+    .h-date { font-size: 12px; color: var(--slate-400); margin-top: 2px; }
+    .h-right { display: flex; align-items: center; gap: 8px; }
+    .h-amount { font-size: 16px; font-weight: 800; color: var(--blue-700); }
+    .del-btn {
+      width: 28px; height: 28px;
+      border: none; background: none;
+      color: var(--slate-300);
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .del-btn:hover { background: var(--red-100); color: var(--red-500); }
+    .h-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .h-chip {
+      background: white;
+      border: 1px solid var(--slate-200);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--slate-700);
+    }
+    .h-chip.sub { background: var(--amber-100); border-color: var(--amber-200); color: var(--amber-600); }
+    .h-chip.fixed { background: #ede9fe; border-color: #c4b5fd; color: #6d28d9; }
+    .fixed-badge {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .fixed-amount-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .fixed-amount-input {
+      width: 140px;
+      padding: 8px 36px 8px 12px;
+      border: 2px solid #c4b5fd;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #4c1d95;
+      background: white;
+      text-align: right;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .fixed-amount-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+    .fixed-amount-wrap { position: relative; display: inline-block; }
+    .fixed-amount-unit {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: #7c3aed;
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .fixed-label { font-size: 13px; color: #6d28d9; font-weight: 600; }
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--slate-400);
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 14px; }
+    .empty-text { font-size: 14px; line-height: 1.7; }
+
+    /* ───── TAB PANELS ───── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ───── SUMMARY CHIPS ───── */
+    .summary-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .s-chip {
+      background: var(--slate-100);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--slate-600);
+      font-weight: 500;
+    }
+    .s-chip strong { color: var(--slate-900); font-size: 14px; font-weight: 700; display: block; margin-top: 1px; }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 26px; }
+      .form-row { flex-direction: column; }
+      .household-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      body { background: white; }
+      .tabs, .tab-btn, .primary-btn, .secondary-btn, .del-btn { display: none !important; }
+      .tab-panel { display: block !important; }
+      .header { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-content">
+    <div class="header-badge">💧 아리수 고객번호 22155004</div>
+    <h1>수도세 계산기</h1>
+    <p>다세대 5세대 · 세대별 인원 비례 분배</p>
+  </div>
+  <div class="header-wave"></div>
+</div>
+
+<div class="main">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('settings', this)">⚙️ 세대 설정</button>
+    <button class="tab-btn" onclick="switchTab('calc', this)">🧮 요금 계산</button>
+    <button class="tab-btn" onclick="switchTab('history', this)">📋 납부 기록</button>
+  </div>
+
+  <!-- ── 세대 설정 ── -->
+  <div id="tab-settings" class="tab-panel active">
+    <div class="card">
+      <div class="card-title"><span class="icon">🏠</span>세대 구성 설정</div>
+      <div class="info-box">
+        세대 이름을 클릭해 수정할 수 있어요.<br>
+        <strong>고정 금액</strong> 세대는 인원 계산 없이 설정한 금액만 납부해요.<br>
+        <strong>기초수급</strong> 토글을 켜면 해당 세대에만 할인이 적용돼요 (1세대만 지정 가능).
+      </div>
+      <div class="household-list" id="household-list"></div>
+    </div>
+  </div>
+
+  <!-- ── 요금 계산 ── -->
+  <div id="tab-calc" class="tab-panel">
+    <div class="card">
+      <div class="card-title"><span class="icon">📄</span>고지서 정보 입력</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">사용기간 시작</label>
+          <input class="form-input" type="month" id="period-start">
+        </div>
+        <div class="form-group">
+          <label class="form-label">사용기간 종료</label>
+          <input class="form-input" type="month" id="period-end">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">납부일</label>
+        <input class="form-input" type="date" id="payment-date">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">납부 총 금액 <span style="font-weight:400;color:var(--slate-400)">(할인 후 실제 납부액)</span></label>
+        <div class="input-wrap">
+          <input class="form-input" type="number" id="total-amount" placeholder="0" min="0" inputmode="numeric">
+          <span class="input-unit">원</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">총 할인 금액 <span style="font-weight:400;color:var(--slate-400)">(기초수급·전자고지 감면 합계)</span></label>
+        <div class="input-wrap">
+          <input class="form-input" type="number" id="total-discount" placeholder="0" min="0" inputmode="numeric">
+          <span class="input-unit">원</span>
+        </div>
+      </div>
+
+      <button class="primary-btn" onclick="doCalculate()">💧 세대별 요금 계산하기</button>
+    </div>
+
+    <!-- 결과 -->
+    <div class="card" id="result-card" style="display:none">
+      <div class="card-title"><span class="icon">📊</span>세대별 납부 요금</div>
+
+      <div id="result-meta" class="result-meta"></div>
+      <div id="summary-chips" class="summary-chips"></div>
+
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>세대</th>
+            <th style="text-align:center">인원</th>
+            <th style="text-align:center">비율</th>
+            <th style="text-align:right">납부 금액</th>
+          </tr>
+        </thead>
+        <tbody id="result-tbody"></tbody>
+      </table>
+
+      <div id="validation-msg"></div>
+      <button class="secondary-btn" onclick="saveHistory()">💾 납부 기록에 저장</button>
+    </div>
+  </div>
+
+  <!-- ── 납부 기록 ── -->
+  <div id="tab-history" class="tab-panel">
+    <div class="card">
+      <div class="card-title"><span class="icon">📋</span>납부 기록</div>
+      <div id="history-container"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 데이터 ──
+const DEFAULT_HOUSEHOLDS = [
+  { id: 1, name: '지하 1호', type: 'fixed', fixedAmount: 0, people: 0, isSubsidy: false },
+  { id: 2, name: '지하 2호', type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
+  { id: 3, name: '1층',     type: 'person', fixedAmount: 0, people: 3, isSubsidy: false },
+  { id: 4, name: '2층',     type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
+  { id: 5, name: '3층',     type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
+];
+
+let households = JSON.parse(localStorage.getItem('wc_households') || 'null') || DEFAULT_HOUSEHOLDS;
+let history    = JSON.parse(localStorage.getItem('wc_history')    || '[]');
+let lastResult = null;
+
+function save() { localStorage.setItem('wc_households', JSON.stringify(households)); }
+
+// ── 세대 렌더 ──
+function renderHouseholds() {
+  document.getElementById('household-list').innerHTML = households.map((h, i) => {
+    const isFixed = h.type === 'fixed';
+    const cardClass = isFixed ? 'fixed-type' : (h.isSubsidy ? 'subsidy' : '');
+    const bottomHtml = isFixed ? `
+      <div class="fixed-amount-section">
+        <span class="fixed-label">🏢 고정 금액</span>
+        <div class="fixed-amount-wrap">
+          <input
+            class="fixed-amount-input"
+            type="number"
+            value="${h.fixedAmount || ''}"
+            placeholder="0"
+            min="0"
+            inputmode="numeric"
+            onchange="updateFixedAmount(${h.id}, this.value)"
+          />
+          <span class="fixed-amount-unit">원</span>
+        </div>
+      </div>
+    ` : `
+      <div class="people-section">
+        <span class="people-label">👤 인원</span>
+        <div class="people-counter">
+          <button class="cnt-btn" onclick="changePeople(${h.id}, -1)">−</button>
+          <span class="cnt-val" id="cnt-${h.id}">${h.people}</span>
+          <button class="cnt-btn" onclick="changePeople(${h.id}, 1)">+</button>
+        </div>
+        <span class="people-label">명</span>
+      </div>
+      <div class="subsidy-section" onclick="toggleSubsidy(${h.id})">
+        <span class="subsidy-label-txt">기초수급</span>
+        <button class="toggle ${h.isSubsidy ? 'on' : ''}" id="toggle-${h.id}" aria-label="기초수급 토글"></button>
+      </div>
+    `;
+    return `
+      <div class="household-card ${cardClass}" id="hcard-${h.id}">
+        <div class="household-top">
+          <div class="household-name-wrap">
+            <div class="household-num">${i + 1}</div>
+            <input
+              class="household-name-input"
+              value="${h.name}"
+              onchange="updateName(${h.id}, this.value)"
+              aria-label="세대명"
+            />
+            ${isFixed ? '<span class="fixed-badge">고정 금액</span>' : (h.isSubsidy ? '<span class="subsidy-badge">기초수급</span>' : '')}
+          </div>
+        </div>
+        <div class="household-bottom">${bottomHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateName(id, val) {
+  const h = households.find(x => x.id === id);
+  if (h) { h.name = val.trim() || h.name; save(); }
+}
+
+function updateFixedAmount(id, val) {
+  const h = households.find(x => x.id === id);
+  if (h) { h.fixedAmount = parseInt(val) || 0; save(); }
+}
+
+function changePeople(id, delta) {
+  const h = households.find(x => x.id === id);
+  if (!h) return;
+  h.people = Math.max(0, h.people + delta);
+  const el = document.getElementById('cnt-' + id);
+  if (el) el.textContent = h.people;
+  save();
+}
+
+function toggleSubsidy(id) {
+  const h = households.find(x => x.id === id);
+  if (!h) return;
+  if (!h.isSubsidy && households.some(x => x.isSubsidy)) {
+    alert('기초수급 세대는 1개만 설정할 수 있어요.\n먼저 기존 기초수급 세대를 해제해주세요.');
+    return;
+  }
+  h.isSubsidy = !h.isSubsidy;
+  save();
+  renderHouseholds();
+}
+
+// ── 탭 전환 ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tab === 'history') renderHistory();
+}
+
+// ── 숫자 포맷 ──
+function fmt(n) { return n.toLocaleString('ko-KR') + '원'; }
+
+function fmtPeriod(start, end) {
+  if (!start) return '기간 미입력';
+  const s = start.replace('-', '년 ') + '월';
+  const e = end && end !== start ? ' ~ ' + end.replace('-', '년 ') + '월' : '';
+  return s + e;
+}
+
+// ── 계산 ──
+function doCalculate() {
+  const totalPaid     = parseInt(document.getElementById('total-amount').value)    || 0;
+  const totalDiscount = parseInt(document.getElementById('total-discount').value)  || 0;
+  const periodStart   = document.getElementById('period-start').value;
+  const periodEnd     = document.getElementById('period-end').value;
+  const paymentDate   = document.getElementById('payment-date').value;
+
+  if (!totalPaid) { alert('납부 총 금액을 입력해주세요.'); return; }
+
+  const fixedHouseholds  = households.filter(h => h.type === 'fixed' && h.fixedAmount > 0);
+  const personHouseholds = households.filter(h => h.type !== 'fixed' && h.people > 0);
+
+  if (personHouseholds.length === 0) { alert('인원이 1명 이상인 세대가 없어요.\n세대 설정 탭에서 인원을 입력해주세요.'); return; }
+
+  // 고정 금액 세대 합산
+  const totalFixed = fixedHouseholds.reduce((s, h) => s + h.fixedAmount, 0);
+
+  // 할인 전 총 금액에서 고정 금액을 제외한 나머지를 인원 비례로 분배
+  const totalBefore     = totalPaid + totalDiscount;
+  const remainBefore    = totalBefore - totalFixed;  // 인원 비례 분배 대상
+  const totalPeople     = personHouseholds.reduce((s, h) => s + h.people, 0);
+  const perPerson       = remainBefore / totalPeople;
+
+  // 고정 금액 세대 결과
+  const fixedResults = fixedHouseholds.map(h => ({
+    ...h, ratio: null, discAmt: 0, finalAmount: h.fixedAmount
+  }));
+
+  // 인원 비례 세대 계산
+  let personResults = personHouseholds.map(h => {
+    const ratio      = h.people / totalPeople;
+    const baseExact  = h.people * perPerson;
+    const discAmt    = h.isSubsidy ? totalDiscount : 0;
+    const finalExact = baseExact - discAmt;
+    return { ...h, ratio, baseExact, discAmt, finalExact, finalAmount: Math.round(finalExact) };
+  });
+
+  // 반올림 오차 보정 → 가장 인원 많은 비(非)기초수급 세대에 흡수
+  const sumPerson = personResults.reduce((s, r) => s + r.finalAmount, 0);
+  const targetPersonSum = totalPaid - totalFixed;
+  const diff = targetPersonSum - sumPerson;
+  if (diff !== 0) {
+    const adj = personResults.filter(r => !r.isSubsidy).sort((a, b) => b.people - a.people)[0]
+              || personResults[0];
+    adj.finalAmount += diff;
+  }
+
+  const results = [...fixedResults, ...personResults];
+
+  // ── 결과 렌더 ──
+  const tbody = document.getElementById('result-tbody');
+  tbody.innerHTML = results.map(r => {
+    const isFixed = r.type === 'fixed';
+    const rowClass = isFixed ? 'fixed-result-row' : (r.isSubsidy ? 'subsidy-row' : '');
+    const peopleCell = isFixed ? '고정' : `${r.people}명`;
+    const ratioCell  = isFixed
+      ? '<span class="ratio-pill" style="background:#ede9fe;color:#6d28d9">고정</span>'
+      : `<span class="ratio-pill">${(r.ratio * 100).toFixed(1)}%</span>`;
+    const amountStyle = isFixed ? 'color:#6d28d9' : (r.isSubsidy ? 'color:var(--amber-600)' : '');
+    return `
+      <tr class="r-row ${rowClass}">
+        <td class="name-cell">
+          ${r.name}
+          ${r.isSubsidy ? `<div class="sub-note">🏷 할인 적용 −${r.discAmt.toLocaleString()}원</div>` : ''}
+          ${isFixed ? '<div class="sub-note" style="color:#7c3aed">🏢 사무실 고정 금액</div>' : ''}
+        </td>
+        <td class="people-cell">${peopleCell}</td>
+        <td class="ratio-cell">${ratioCell}</td>
+        <td style="${amountStyle}">${fmt(r.finalAmount)}</td>
+      </tr>
+    `;
+  }).join('') + `
+    <tr class="total-row">
+      <td colspan="3"><strong>합계</strong> · 거주 세대 ${totalPeople}명</td>
+      <td><strong>${fmt(results.reduce((s, r) => s + r.finalAmount, 0))}</strong></td>
+    </tr>
+  `;
+
+  // 메타
+  document.getElementById('result-meta').innerHTML = `
+    <div class="result-period-label">📅 ${fmtPeriod(periodStart, periodEnd)}${paymentDate ? ' · 납부 ' + paymentDate : ''}</div>
+    <div class="result-total-badge">${fmt(totalPaid)}</div>
+  `;
+
+  const chips = [
+    `<div class="s-chip">납부 총 금액<strong>${fmt(totalPaid)}</strong></div>`,
+    `<div class="s-chip">총 할인 금액<strong>−${fmt(totalDiscount)}</strong></div>`,
+    `<div class="s-chip">할인 전 금액<strong>${fmt(totalBefore)}</strong></div>`,
+  ];
+  if (totalFixed > 0) chips.push(`<div class="s-chip">사무실 고정<strong>${fmt(totalFixed)}</strong></div>`);
+  chips.push(`<div class="s-chip">거주 세대<strong>${personHouseholds.length}세대 · ${totalPeople}명</strong></div>`);
+  document.getElementById('summary-chips').innerHTML = chips.join('');
+
+  // 검증
+  const finalSum = results.reduce((s, r) => s + r.finalAmount, 0);
+  const ok = Math.abs(finalSum - totalPaid) <= 1;
+  document.getElementById('validation-msg').innerHTML = ok
+    ? `<div class="v-ok">✅ 합계 검증 완료 — 세대별 합산 ${fmt(finalSum)}이 납부 총 금액과 일치해요</div>`
+    : `<div class="v-err">⚠️ 합계 불일치 — 세대별 합산 ${fmt(finalSum)} vs 납부 총 금액 ${fmt(totalPaid)}</div>`;
+
+  const resultCard = document.getElementById('result-card');
+  resultCard.style.display = 'block';
+  setTimeout(() => resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+
+  lastResult = { totalPaid, totalDiscount, periodStart, periodEnd, paymentDate, results, savedAt: null };
+}
+
+// ── 기록 저장 ──
+function saveHistory() {
+  if (!lastResult) return;
+  if (lastResult.savedAt) { alert('이미 저장된 내역이에요.'); return; }
+  lastResult.savedAt = new Date().toISOString();
+  history.unshift({ ...lastResult });
+  localStorage.setItem('wc_history', JSON.stringify(history));
+  alert('💾 납부 기록이 저장되었어요!');
+}
+
+// ── 기록 렌더 ──
+function renderHistory() {
+  const container = document.getElementById('history-container');
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">아직 저장된 납부 기록이 없어요.<br>요금 계산 후 저장해보세요.</div>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="history-list">${history.map((entry, i) => `
+    <div class="h-item">
+      <div class="h-top">
+        <div>
+          <div class="h-period">${fmtPeriod(entry.periodStart, entry.periodEnd)}</div>
+          <div class="h-date">납부일 ${entry.paymentDate || '미입력'} · 저장 ${new Date(entry.savedAt).toLocaleDateString('ko-KR')}</div>
+        </div>
+        <div class="h-right">
+          <div class="h-amount">${fmt(entry.totalPaid)}</div>
+          <button class="del-btn" onclick="deleteHistory(${i})" title="삭제">✕</button>
+        </div>
+      </div>
+      <div class="h-chips">
+        ${entry.results.map(r => {
+          const chipClass = r.type === 'fixed' ? 'fixed' : (r.isSubsidy ? 'sub' : '');
+          const label = r.type === 'fixed' ? '고정' : `${r.people}명`;
+          return `<span class="h-chip ${chipClass}">${r.name} ${label} · ${fmt(r.finalAmount)}</span>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function deleteHistory(i) {
+  if (!confirm('이 납부 기록을 삭제할까요?')) return;
+  history.splice(i, 1);
+  localStorage.setItem('wc_history', JSON.stringify(history));
+  renderHistory();
+}
+
+// ── 초기화 ──
+renderHouseholds();
+
+const today = new Date();
+document.getElementById('payment-date').value = today.toISOString().slice(0, 10);
+const prev = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+const prevStr = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
+document.getElementById('period-start').value = prevStr;
+document.getElementById('period-end').value   = prevStr;
+</script>
+</body>
+</html>
