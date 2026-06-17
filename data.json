@@ -1,5 +1,1862 @@
 {
   "version": 1,
-  "wc_history": [],
-  "wc_households": []
+  "wc_history": [
+    {
+      "totalPaid": 110040,
+      "totalDiscount": 15000,
+      "periodStart": "2021-09-29",
+      "periodEnd": "2021-11-28",
+      "paymentDate": "2021-12-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 12227
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 15000,
+          "finalAmount": 21680
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 61133
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2021-12-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 77040,
+      "totalDiscount": 15000,
+      "periodStart": "2021-11-29",
+      "periodEnd": "2022-01-28",
+      "paymentDate": "2022-02-28",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 8560
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 15000,
+          "finalAmount": 10680
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 42800
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2022-02-28T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 104760,
+      "totalDiscount": 15000,
+      "periodStart": "2022-01-29",
+      "periodEnd": "2022-03-28",
+      "paymentDate": "2022-05-02",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 11640
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 15000,
+          "finalAmount": 19920
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 58200
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2022-05-02T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 104760,
+      "totalDiscount": 15000,
+      "periodStart": "2022-03-29",
+      "periodEnd": "2022-05-28",
+      "paymentDate": "2022-06-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 11640
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 15000,
+          "finalAmount": 19920
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 58200
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2022-06-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 108960,
+      "totalDiscount": 14430,
+      "periodStart": "2022-05-29",
+      "periodEnd": "2022-07-28",
+      "paymentDate": "2022-08-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 12043
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14430,
+          "finalAmount": 21700
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 60217
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2022-08-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 110010,
+      "totalDiscount": 14420,
+      "periodStart": "2022-07-29",
+      "periodEnd": "2022-09-28",
+      "paymentDate": "2022-10-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 12159
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14420,
+          "finalAmount": 22057
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 60794
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2022-10-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 96360,
+      "totalDiscount": 14480,
+      "periodStart": "2022-09-29",
+      "periodEnd": "2022-11-28",
+      "paymentDate": "2023-01-02",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 10649
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14480,
+          "finalAmount": 17467
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 53244
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2023-01-02T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 134680,
+      "totalDiscount": 14280,
+      "periodStart": "2022-11-29",
+      "periodEnd": "2023-01-28",
+      "paymentDate": "2023-02-28",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 14885
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14280,
+          "finalAmount": 30373
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 74422
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2023-02-28T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 96410,
+      "totalDiscount": 14430,
+      "periodStart": "2023-01-29",
+      "periodEnd": "2023-03-28",
+      "paymentDate": "2023-05-02",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 10649
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14430,
+          "finalAmount": 17517
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 53244
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2023-05-02T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 119410,
+      "totalDiscount": 14320,
+      "periodStart": "2023-03-29",
+      "periodEnd": "2023-05-28",
+      "paymentDate": "2023-06-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.1111111111111111,
+          "discAmt": 0,
+          "finalAmount": 13192
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.3333333333333333,
+          "discAmt": 14320,
+          "finalAmount": 25257
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.5555555555555556,
+          "discAmt": 0,
+          "finalAmount": 65961
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false
+      },
+      "memo": "",
+      "savedAt": "2023-06-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 126310,
+      "totalDiscount": 14280,
+      "periodStart": "2023-05-29",
+      "periodEnd": "2023-07-28",
+      "paymentDate": "2023-08-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 11417
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14280,
+          "finalAmount": 19972
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 57086
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 22835
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "3층 입주",
+      "savedAt": "2023-08-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 128610,
+      "totalDiscount": 14270,
+      "periodStart": "2023-07-29",
+      "periodEnd": "2023-09-28",
+      "paymentDate": "2023-10-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 11626
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14270,
+          "finalAmount": 20606
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 58127
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 23251
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2023-10-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 125160,
+      "totalDiscount": 14290,
+      "periodStart": "2023-09-29",
+      "periodEnd": "2023-11-28",
+      "paymentDate": "2024-01-02",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 11314
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14290,
+          "finalAmount": 19651
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 56568
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 22627
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-01-02T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 115960,
+      "totalDiscount": 14330,
+      "periodStart": "2023-11-29",
+      "periodEnd": "2024-01-28",
+      "paymentDate": "2024-02-29",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 10480
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14330,
+          "finalAmount": 17113
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 52405
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 20962
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-02-29T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 119410,
+      "totalDiscount": 14320,
+      "periodStart": "2024-01-29",
+      "periodEnd": "2024-03-28",
+      "paymentDate": "2024-04-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 10794
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14320,
+          "finalAmount": 18061
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 53968
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 21587
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-04-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 129760,
+      "totalDiscount": 14260,
+      "periodStart": "2024-03-29",
+      "periodEnd": "2024-05-28",
+      "paymentDate": "2024-07-01",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 1,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.09090909090909091,
+          "discAmt": 0,
+          "finalAmount": 11730
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.2727272727272727,
+          "discAmt": 14260,
+          "finalAmount": 20927
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.45454545454545453,
+          "discAmt": 0,
+          "finalAmount": 58645
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.18181818181818182,
+          "discAmt": 0,
+          "finalAmount": 23458
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-07-01T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 128610,
+      "totalDiscount": 11270,
+      "periodStart": "2024-05-29",
+      "periodEnd": "2024-07-28",
+      "paymentDate": "2024-09-02",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 20814
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 11270,
+          "finalAmount": 19950
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 52033
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 20813
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "지하 2호 2명으로 변경",
+      "savedAt": "2024-09-02T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 138960,
+      "totalDiscount": 14220,
+      "periodStart": "2024-07-29",
+      "periodEnd": "2024-09-28",
+      "paymentDate": "2024-10-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 23030
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 14220,
+          "finalAmount": 20325
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 57575
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 23030
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-10-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 132060,
+      "totalDiscount": 14250,
+      "periodStart": "2024-09-29",
+      "periodEnd": "2024-11-28",
+      "paymentDate": "2024-12-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21884
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 14250,
+          "finalAmount": 18578
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 54713
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21885
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2024-12-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 119410,
+      "totalDiscount": 14320,
+      "periodStart": "2024-11-29",
+      "periodEnd": "2025-01-28",
+      "paymentDate": "2025-02-28",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 19788
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 14320,
+          "finalAmount": 15363
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 49471
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 19788
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2025-02-28T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 132060,
+      "totalDiscount": 14250,
+      "periodStart": "2025-01-29",
+      "periodEnd": "2025-03-28",
+      "paymentDate": "2025-04-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21884
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 14250,
+          "finalAmount": 18578
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 54713
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21885
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2025-04-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 130910,
+      "totalDiscount": 14260,
+      "periodStart": "2025-03-29",
+      "periodEnd": "2025-05-28",
+      "paymentDate": "2025-06-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21694
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 14260,
+          "finalAmount": 18283
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 54238
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 21695
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2025-06-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 124450,
+      "totalDiscount": 15000,
+      "periodStart": "2025-05-29",
+      "periodEnd": "2025-07-28",
+      "paymentDate": "2025-09-01",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 20741
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 15000,
+          "finalAmount": 16113
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 51854
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 20742
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2025-09-01T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 111860,
+      "totalDiscount": 15000,
+      "periodStart": "2025-07-29",
+      "periodEnd": "2025-09-28",
+      "paymentDate": "2025-10-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 2,
+          "name": "지하 2호",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 18644
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.25,
+          "discAmt": 15000,
+          "finalAmount": 12965
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 5,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.4166666666666667,
+          "discAmt": 0,
+          "finalAmount": 46608
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.16666666666666666,
+          "discAmt": 0,
+          "finalAmount": 18643
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "9월 24일 5명 살던 2층 이사감",
+      "savedAt": "2025-10-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 92770,
+      "totalDiscount": 8240,
+      "periodStart": "2025-09-29",
+      "periodEnd": "2025-11-28",
+      "paymentDate": "2025-12-31",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.42857142857142855,
+          "discAmt": 8240,
+          "finalAmount": 28621
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 24575
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 24574
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2025-12-31T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 71990,
+      "totalDiscount": 15000,
+      "periodStart": "2025-11-29",
+      "periodEnd": "2026-01-28",
+      "paymentDate": "2026-02-28",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.42857142857142855,
+          "discAmt": 15000,
+          "finalAmount": 15853
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 20568
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 20569
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2026-02-28T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 68450,
+      "totalDiscount": 15000,
+      "periodStart": "2026-01-29",
+      "periodEnd": "2026-03-28",
+      "paymentDate": "2026-04-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "people": 0,
+          "isSubsidy": false,
+          "fixedAmount": 15000,
+          "ratio": 0,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "people": 3,
+          "type": "person",
+          "isSubsidy": true,
+          "fixedAmount": 0,
+          "ratio": 0.42857142857142855,
+          "discAmt": 15000,
+          "finalAmount": 14336
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 19557
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "people": 2,
+          "type": "person",
+          "isSubsidy": false,
+          "fixedAmount": 0,
+          "ratio": 0.2857142857142857,
+          "discAmt": 0,
+          "finalAmount": 19557
+        }
+      ],
+      "paidStatus": {
+        "1": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": "",
+      "savedAt": "2026-04-30T00:00:00.000Z"
+    }
+  ],
+  "wc_households": [
+    {
+      "id": 1,
+      "name": "지하 1호",
+      "type": "fixed",
+      "fixedAmount": 15000,
+      "people": 0,
+      "isSubsidy": false
+    },
+    {
+      "id": 2,
+      "name": "지하 2호",
+      "type": "person",
+      "fixedAmount": 0,
+      "people": 0,
+      "isSubsidy": false
+    },
+    {
+      "id": 3,
+      "name": "1층",
+      "type": "person",
+      "fixedAmount": 0,
+      "people": 3,
+      "isSubsidy": true
+    },
+    {
+      "id": 4,
+      "name": "2층",
+      "type": "person",
+      "fixedAmount": 0,
+      "people": 2,
+      "isSubsidy": false
+    },
+    {
+      "id": 5,
+      "name": "3층",
+      "type": "person",
+      "fixedAmount": 0,
+      "people": 2,
+      "isSubsidy": false
+    }
+  ]
 }
