@@ -1815,6 +1815,73 @@
       },
       "memo": "",
       "savedAt": "2026-04-30T00:00:00.000Z"
+    },
+    {
+      "totalPaid": 85390,
+      "totalDiscount": 21320,
+      "periodStart": "2026-03-29",
+      "periodEnd": "2026-05-28",
+      "paymentDate": "2026-06-30",
+      "results": [
+        {
+          "id": 1,
+          "name": "지하 1호",
+          "type": "fixed",
+          "fixedAmount": 15000,
+          "people": 0,
+          "isSubsidy": false,
+          "ratio": null,
+          "discAmt": 0,
+          "finalAmount": 15000
+        },
+        {
+          "id": 3,
+          "name": "1층",
+          "type": "person",
+          "fixedAmount": 0,
+          "people": 3,
+          "isSubsidy": true,
+          "ratio": 0.42857142857142855,
+          "baseExact": 39304.28571428571,
+          "discAmt": 21320,
+          "finalExact": 17984.28571428571,
+          "finalAmount": 17984
+        },
+        {
+          "id": 4,
+          "name": "2층",
+          "type": "person",
+          "fixedAmount": 0,
+          "people": 2,
+          "isSubsidy": false,
+          "ratio": 0.2857142857142857,
+          "baseExact": 26202.85714285714,
+          "discAmt": 0,
+          "finalExact": 26202.85714285714,
+          "finalAmount": 26203
+        },
+        {
+          "id": 5,
+          "name": "3층",
+          "type": "person",
+          "fixedAmount": 0,
+          "people": 2,
+          "isSubsidy": false,
+          "ratio": 0.2857142857142857,
+          "baseExact": 26202.85714285714,
+          "discAmt": 0,
+          "finalExact": 26202.85714285714,
+          "finalAmount": 26203
+        }
+      ],
+      "savedAt": "2026-06-17T16:59:43.098Z",
+      "paidStatus": {
+        "1": false,
+        "3": false,
+        "4": false,
+        "5": false
+      },
+      "memo": ""
     }
   ],
   "wc_households": [
