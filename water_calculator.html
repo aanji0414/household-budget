@@ -1317,7 +1317,7 @@ function saveMemo(idx, val) {
 
 // ── 과거 기록 불러오기 ──
 function importPastRecords() {
-  if (history.length > 0 && !confirm(history.length + '개의 기존 납부 기록이 있습니다.\n과거 기록을 추가할까요? (중복 기간은 건너뜁니다)')) return;
+  if (history.length > 0 && !confirm(history.length + '개의 기존 납부 기록이 있습니다.\n과거 기록으로 덮어쓸까요?\n(같은 기간의 기록은 교체됩니다)')) return;
 
   // [periodStart, periodEnd, paymentDate, 납부총금액(gross), 납부금액합계(net), memo]
   const RAW = [
@@ -1395,10 +1395,15 @@ function importPastRecords() {
     return { totalPaid, totalDiscount, periodStart: pStart, periodEnd: pEnd, paymentDate: payDate, results, paidStatus, memo, savedAt: new Date(payDate).toISOString() };
   }
 
-  const existingKeys = new Set(history.map(e => e.periodStart + '|' + e.periodEnd));
-  const newEntries = RAW.map((r, i) => buildEntry(r, i)).filter(e => !existingKeys.has(e.periodStart + '|' + e.periodEnd));
-
-  history.push(...newEntries);
+  const importedEntries = RAW.map((r, i) => buildEntry(r, i));
+  // 같은 기간 기록은 교체, 없는 기간은 추가
+  importedEntries.forEach(entry => {
+    const key = entry.periodStart + '|' + entry.periodEnd;
+    const existIdx = history.findIndex(e => e.periodStart + '|' + e.periodEnd === key);
+    if (existIdx >= 0) history.splice(existIdx, 1, entry);
+    else history.push(entry);
+  });
+  const newEntries = importedEntries; // alert용
   history.sort((a, b) => {
     const da = a.paymentDate || a.savedAt || '';
     const db = b.paymentDate || b.savedAt || '';
