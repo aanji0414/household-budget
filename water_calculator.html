@@ -1317,7 +1317,7 @@ function saveMemo(idx, val) {
 
 // ── 과거 기록 불러오기 ──
 function importPastRecords() {
-  if (history.length > 0 && !confirm(history.length + '개의 기존 납부 기록이 있습니다.\n과거 기록으로 덮어쓸까요?\n(같은 기간의 기록은 교체됩니다)')) return;
+  if (history.length > 0 && !confirm(history.length + '개의 기존 납부 기록이 있습니다.\n전체 삭제 후 과거 기록으로 교체할까요?')) return;
 
   // [periodStart, periodEnd, paymentDate, 납부총금액(gross), 납부금액합계(net), memo]
   const RAW = [
@@ -1337,7 +1337,7 @@ function importPastRecords() {
     ['2023-11-29','2024-01-28','2024-02-29',130290,115960,''],
     ['2024-01-29','2024-03-28','2024-04-30',133730,119410,''],
     ['2024-03-29','2024-05-28','2024-07-01',144020,129760,''],
-    ['2024-05-29','2024-07-28','2024-09-02',139880,128610,''],
+    ['2024-05-29','2024-07-28','2024-09-02',139880,128610,'지하 2호 2명으로 변경'],
     ['2024-07-29','2024-09-28','2024-10-31',153180,138960,''],
     ['2024-09-29','2024-11-28','2024-12-31',146310,132060,''],
     ['2024-11-29','2025-01-28','2025-02-28',133730,119410,''],
@@ -1351,9 +1351,9 @@ function importPastRecords() {
   ];
 
   // 기간별 세대 구성:
-  // idx 0~9  (기간1~10):  지하2호(2), 1층(3), 2층(5) — 3층 미입주
-  // idx 10~23 (기간11~24): 지하2호(2), 1층(3), 2층(5), 3층(2)
-  // idx 24~26 (기간25~27): 지하2호(2), 1층(3), 3층(2) — 2층 이사 (2025-09-28)
+  // idx 0~15  (기간1~16):  지하2호(1명), 1층(3), 2층(5) — 3층은 idx10부터
+  // idx 16~23 (기간17~24): 지하2호(2명), 1층(3), 2층(5), 3층(2)
+  // idx 24~26 (기간25~27): 지하2호(2명), 1층(3), 3층(2) — 2층 이사 (2025-09-28)
   function buildEntry(raw, idx) {
     const [pStart, pEnd, payDate, grossVal, netVal, memo] = raw;
     const totalPaid = Math.min(grossVal, netVal);
@@ -1362,9 +1362,10 @@ function importPastRecords() {
     const fixedAmt = 15000;
     const remainBefore = totalBefore - fixedAmt;
 
+    const jiha2People = idx < 16 ? 1 : 2;
     const personHHs = [
-      { id: 2, name: '지하 2호', people: 2, type: 'person', isSubsidy: false },
-      { id: 3, name: '1층',     people: 3, type: 'person', isSubsidy: true  },
+      { id: 2, name: '지하 2호', people: jiha2People, type: 'person', isSubsidy: false },
+      { id: 3, name: '1층',      people: 3,           type: 'person', isSubsidy: true  },
     ];
     if (idx < 24) personHHs.push({ id: 4, name: '2층', people: 5, type: 'person', isSubsidy: false });
     if (idx >= 10) personHHs.push({ id: 5, name: '3층', people: 2, type: 'person', isSubsidy: false });
@@ -1395,22 +1396,16 @@ function importPastRecords() {
     return { totalPaid, totalDiscount, periodStart: pStart, periodEnd: pEnd, paymentDate: payDate, results, paidStatus, memo, savedAt: new Date(payDate).toISOString() };
   }
 
-  const importedEntries = RAW.map((r, i) => buildEntry(r, i));
-  // 같은 기간 기록은 교체, 없는 기간은 추가
-  importedEntries.forEach(entry => {
-    const key = entry.periodStart + '|' + entry.periodEnd;
-    const existIdx = history.findIndex(e => e.periodStart + '|' + e.periodEnd === key);
-    if (existIdx >= 0) history.splice(existIdx, 1, entry);
-    else history.push(entry);
-  });
-  const newEntries = importedEntries; // alert용
+  // 기존 기록 전체 교체
+  history.length = 0;
+  RAW.forEach((r, i) => history.push(buildEntry(r, i)));
   history.sort((a, b) => {
     const da = a.paymentDate || a.savedAt || '';
     const db = b.paymentDate || b.savedAt || '';
     return da.localeCompare(db);
   });
   localStorage.setItem('wc_history', JSON.stringify(history));
-  alert(newEntries.length + '개의 납부 기록을 불러왔어요!');
+  alert(history.length + '개의 납부 기록을 불러왔어요!');
   renderHistory();
 }
 
