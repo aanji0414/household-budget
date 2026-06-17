@@ -1040,6 +1040,7 @@
       <div class="card-title">
         <span class="icon">📋</span>납부 기록
         <div style="margin-left:auto;display:flex;gap:6px">
+          <button onclick="ghSave()" style="padding:6px 12px;background:#ede9fe;border:1px solid #c4b5fd;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#6d28d9;font-family:inherit" title="GitHub에 저장">☁️ 클라우드 저장</button>
           <button onclick="exportData()" style="padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#15803d;font-family:inherit" title="데이터 백업">💾 백업</button>
           <label style="padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#1d4ed8;font-family:inherit" title="데이터 복원">
             📂 복원<input type="file" accept=".json" style="display:none" onchange="importData(event)">
@@ -1048,6 +1049,7 @@
           <button onclick="importPastRecords()" style="padding:6px 12px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#475569;font-family:inherit" title="구글 시트 과거 기록 불러오기">📥 과거 기록</button>
         </div>
       </div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;min-height:16px" id="gh-status"></div>
       <div class="year-filter-row">
         <select class="year-select" id="year-select" onchange="onYearChange(this.value)">
           <option value="all">전체 연도</option>
@@ -1073,6 +1075,61 @@ let households   = JSON.parse(localStorage.getItem('wc_households') || 'null') |
 let history      = JSON.parse(localStorage.getItem('wc_history')    || '[]');
 let lastResult   = null;
 let selectedYear = 'all';
+let _ghToken     = null; // 세션 메모리 전용 — localStorage에 저장 안 함
+
+const GH_RAW  = 'https://raw.githubusercontent.com/aanji0414/household-budget/master/data.json';
+const GH_API  = 'https://api.github.com/repos/aanji0414/household-budget/contents/data.json';
+
+async function ghLoad() {
+  try {
+    const res = await fetch(GH_RAW + '?t=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.wc_history && data.wc_history.length > 0) {
+      history.length = 0;
+      data.wc_history.forEach(r => history.push(r));
+      localStorage.setItem('wc_history', JSON.stringify(history));
+    }
+    if (data.wc_households && data.wc_households.length > 0) {
+      households.length = 0;
+      data.wc_households.forEach(h => households.push(h));
+      localStorage.setItem('wc_households', JSON.stringify(households));
+    }
+    setGhStatus('✅ 클라우드 데이터 로드 완료');
+  } catch { setGhStatus('⚠️ 클라우드 로드 실패 (로컬 데이터 사용 중)'); }
+}
+
+async function ghSave() {
+  if (!_ghToken) {
+    _ghToken = prompt('GitHub Personal Access Token 입력\n(탭을 닫으면 자동 삭제됩니다)');
+    if (!_ghToken) return;
+  }
+  setGhStatus('⏳ 저장 중...');
+  try {
+    // 현재 파일 SHA 조회
+    const infoRes = await fetch(GH_API, {
+      headers: { Authorization: 'token ' + _ghToken, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (infoRes.status === 401) { _ghToken = null; setGhStatus('❌ Token 오류. 다시 시도해주세요.'); return; }
+    const sha = infoRes.ok ? (await infoRes.json()).sha : undefined;
+
+    const payload = JSON.stringify({ version: 1, wc_history: history, wc_households: households }, null, 2);
+    const content = btoa(unescape(encodeURIComponent(payload)));
+
+    const putRes = await fetch(GH_API, {
+      method: 'PUT',
+      headers: { Authorization: 'token ' + _ghToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: '수도세 데이터 업데이트', content, ...(sha ? { sha } : {}) })
+    });
+    if (putRes.ok) setGhStatus('✅ 클라우드 저장 완료 ' + new Date().toLocaleTimeString());
+    else { _ghToken = null; setGhStatus('❌ 저장 실패. Token을 확인해주세요.'); }
+  } catch { setGhStatus('❌ 네트워크 오류'); }
+}
+
+function setGhStatus(msg) {
+  const el = document.getElementById('gh-status');
+  if (el) el.textContent = msg;
+}
 
 function save() { localStorage.setItem('wc_households', JSON.stringify(households)); }
 
@@ -1751,6 +1808,8 @@ async function extractFromImage() {
 // ── 초기화 ──
 renderHouseholds();
 updateApiKeyStatus();
+// 페이지 로드 시 GitHub에서 최신 데이터 자동 로드
+ghLoad();
 
 const today = new Date();
 const todayStr = today.toISOString().slice(0, 10);
