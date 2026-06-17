@@ -1607,7 +1607,13 @@ function renderHistory() {
     if (!grouped[y]) grouped[y] = [];
     grouped[y].push({ entry, i });
   });
-  const years = Object.keys(grouped).sort((a, b) => a - b); // 오름차순 (과거→현재)
+  const years = Object.keys(grouped).sort((a, b) => a - b);
+  // 각 연도 내 카드는 최신순(내림차순) 정렬
+  years.forEach(y => grouped[y].sort((a, b) => {
+    const da = a.entry.paymentDate || a.entry.savedAt || '';
+    const db = b.entry.paymentDate || b.entry.savedAt || '';
+    return db.localeCompare(da);
+  }));
 
   container.innerHTML = years.map(year => `
     <div class="year-header">📅 ${year}년</div>
