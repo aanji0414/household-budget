@@ -1169,7 +1169,13 @@ function switchTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
   if (btn) btn.classList.add('active');
-  if (tab === 'history') renderHistory();
+  if (tab === 'history') {
+    if (history.length > 0) {
+      const latestYear = [...new Set(history.map(getYear))].sort((a, b) => b - a)[0];
+      selectedYear = latestYear;
+    }
+    renderHistory();
+  }
 }
 
 // ── 숫자 포맷 ──
