@@ -1039,7 +1039,13 @@
     <div class="card">
       <div class="card-title">
         <span class="icon">📋</span>납부 기록
-        <button onclick="importPastRecords()" style="margin-left:auto;padding:6px 14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#475569;font-family:inherit" title="구글 시트 과거 기록 불러오기">📥 과거 기록 불러오기</button>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button onclick="exportData()" style="padding:6px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#15803d;font-family:inherit" title="데이터 백업">💾 백업</button>
+          <label style="padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#1d4ed8;font-family:inherit" title="데이터 복원">
+            📂 복원<input type="file" accept=".json" style="display:none" onchange="importData(event)">
+          </label>
+          <button onclick="importPastRecords()" style="padding:6px 12px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#475569;font-family:inherit" title="구글 시트 과거 기록 불러오기">📥 과거 기록</button>
+        </div>
       </div>
       <div class="year-filter-row">
         <select class="year-select" id="year-select" onchange="onYearChange(this.value)">
@@ -1314,6 +1320,48 @@ function saveHistory() {
 function onYearChange(val) {
   selectedYear = val;
   renderHistory();
+}
+
+function exportData() {
+  const data = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    wc_history: history,
+    wc_households: households,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '수도세_백업_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.wc_history) throw new Error('올바른 백업 파일이 아닙니다.');
+      if (!confirm(data.wc_history.length + '개의 납부 기록을 복원할까요?\n현재 데이터가 덮어써집니다.')) return;
+      history.length = 0;
+      data.wc_history.forEach(r => history.push(r));
+      if (data.wc_households) {
+        households.length = 0;
+        data.wc_households.forEach(h => households.push(h));
+        localStorage.setItem('wc_households', JSON.stringify(households));
+      }
+      localStorage.setItem('wc_history', JSON.stringify(history));
+      renderHistory();
+      alert('복원 완료!');
+    } catch (err) {
+      alert('복원 실패: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 function copyCustomerNo() {
