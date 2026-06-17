@@ -1044,6 +1044,7 @@
           <label style="padding:6px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#1d4ed8;font-family:inherit" title="데이터 복원">
             📂 복원<input type="file" accept=".json" style="display:none" onchange="importData(event)">
           </label>
+          <button onclick="deduplicateHistory()" style="padding:6px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#c2410c;font-family:inherit" title="중복 기록 제거">🧹 중복 제거</button>
           <button onclick="importPastRecords()" style="padding:6px 12px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:#475569;font-family:inherit" title="구글 시트 과거 기록 불러오기">📥 과거 기록</button>
         </div>
       </div>
@@ -1187,7 +1188,7 @@ function fmtPeriod(start, end) {
 }
 
 function getYear(entry) {
-  const d = entry.periodStart || entry.savedAt || '';
+  const d = entry.paymentDate || entry.periodEnd || entry.periodStart || entry.savedAt || '';
   return d.slice(0, 4) || '기타';
 }
 
@@ -1482,6 +1483,26 @@ function importPastRecords() {
 }
 
 // ── 기록 렌더 ──
+function deduplicateHistory() {
+  const seen = new Map();
+  history.forEach((entry, i) => {
+    const key = (entry.periodStart || '') + '|' + (entry.periodEnd || '');
+    if (!seen.has(key)) seen.set(key, i);
+  });
+  const keepIdxs = new Set(seen.values());
+  const removed = history.length - keepIdxs.size;
+  if (removed > 0) {
+    const deduped = history.filter((_, i) => keepIdxs.has(i));
+    history.length = 0;
+    deduped.forEach(e => history.push(e));
+    localStorage.setItem('wc_history', JSON.stringify(history));
+    alert(removed + '개의 중복 기록을 제거했어요.');
+  } else {
+    alert('중복 기록이 없어요.');
+  }
+  renderHistory();
+}
+
 function renderHistory() {
   const container = document.getElementById('history-container');
   if (history.length === 0) {
