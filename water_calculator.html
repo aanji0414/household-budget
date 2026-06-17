@@ -1362,12 +1362,14 @@ function importPastRecords() {
     const fixedAmt = 15000;
     const remainBefore = totalBefore - fixedAmt;
 
-    const jiha2People = idx < 16 ? 1 : 2;
+    // 지하 2호: idx<16 → 1명, idx 16~23 → 2명, idx>=24 → 0명(이사)
+    const jiha2People = idx < 16 ? 1 : idx < 24 ? 2 : 0;
     const personHHs = [
-      { id: 2, name: '지하 2호', people: jiha2People, type: 'person', isSubsidy: false },
-      { id: 3, name: '1층',      people: 3,           type: 'person', isSubsidy: true  },
+      { id: 3, name: '1층', people: 3, type: 'person', isSubsidy: true },
     ];
-    if (idx < 24) personHHs.push({ id: 4, name: '2층', people: 5, type: 'person', isSubsidy: false });
+    if (jiha2People > 0) personHHs.unshift({ id: 2, name: '지하 2호', people: jiha2People, type: 'person', isSubsidy: false });
+    // 2층: idx<24 → 구세입자 5명, idx>=24 → 신세입자 2명
+    personHHs.push({ id: 4, name: '2층', people: idx < 24 ? 5 : 2, type: 'person', isSubsidy: false });
     if (idx >= 10) personHHs.push({ id: 5, name: '3층', people: 2, type: 'person', isSubsidy: false });
 
     const totalPeople = personHHs.reduce((s, h) => s + h.people, 0);
