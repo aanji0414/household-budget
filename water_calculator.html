@@ -935,7 +935,21 @@
   <!-- ── 요금 계산 ── -->
   <div id="tab-calc" class="tab-panel">
     <div class="card">
-      <div class="card-title"><span class="icon">📄</span>고지서 정보 입력</div>
+      <div class="card-title">
+        <span class="icon">📄</span>고지서 정보 입력
+        <a href="https://i121.seoul.go.kr/cs/cyber/front/cgcalc/NR_cgJungInfo.do" target="_blank" rel="noopener"
+          style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:6px 12px;background:#e0f2fe;border-radius:8px;font-size:12px;font-weight:600;color:#0369a1;text-decoration:none;white-space:nowrap"
+          title="아리수 요금조회 바로가기">
+          💧 아리수 바로가기
+        </a>
+      </div>
+
+      <!-- 고객번호 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0">
+        <span style="font-size:13px;color:#64748b;font-weight:500">고객번호</span>
+        <span id="customer-no" style="font-size:14px;font-weight:700;color:#1e293b;letter-spacing:1px">22155004</span>
+        <button onclick="copyCustomerNo()" style="margin-left:auto;padding:4px 10px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:#475569;font-family:inherit" id="copy-btn">복사</button>
+      </div>
 
       <!-- 이미지 업로드 영역 -->
       <label for="bill-file-input" id="upload-zone" class="upload-zone"
@@ -1301,6 +1315,15 @@ function saveHistory() {
 function onYearChange(val) {
   selectedYear = val;
   renderHistory();
+}
+
+function copyCustomerNo() {
+  const no = document.getElementById('customer-no').textContent;
+  navigator.clipboard.writeText(no).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '복사됨 ✓';
+    setTimeout(() => { btn.textContent = '복사'; }, 1500);
+  });
 }
 
 function togglePaid(idx, hid) {
