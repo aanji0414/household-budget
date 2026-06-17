@@ -1042,11 +1042,11 @@
 <script>
 // ── 데이터 ──
 const DEFAULT_HOUSEHOLDS = [
-  { id: 1, name: '지하 1호', type: 'fixed', fixedAmount: 0, people: 0, isSubsidy: false },
-  { id: 2, name: '지하 2호', type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
-  { id: 3, name: '1층',     type: 'person', fixedAmount: 0, people: 3, isSubsidy: false },
-  { id: 4, name: '2층',     type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
-  { id: 5, name: '3층',     type: 'person', fixedAmount: 0, people: 2, isSubsidy: false },
+  { id: 1, name: '지하 1호', type: 'fixed',  fixedAmount: 15000, people: 0, isSubsidy: false },
+  { id: 2, name: '지하 2호', type: 'person', fixedAmount: 0,     people: 0, isSubsidy: false },
+  { id: 3, name: '1층',     type: 'person', fixedAmount: 0,     people: 3, isSubsidy: true  },
+  { id: 4, name: '2층',     type: 'person', fixedAmount: 0,     people: 2, isSubsidy: false },
+  { id: 5, name: '3층',     type: 'person', fixedAmount: 0,     people: 2, isSubsidy: false },
 ];
 
 let households   = JSON.parse(localStorage.getItem('wc_households') || 'null') || DEFAULT_HOUSEHOLDS;
