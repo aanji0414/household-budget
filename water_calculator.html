@@ -1096,6 +1096,8 @@ async function ghLoad() {
       data.wc_households.forEach(h => households.push(h));
       localStorage.setItem('wc_households', JSON.stringify(households));
     }
+    const loadedAt = new Date().toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+    localStorage.setItem('wc_last_loaded', loadedAt);
     setGhStatus('✅ 클라우드 데이터 로드 완료');
   } catch { setGhStatus('⚠️ 클라우드 로드 실패 (로컬 데이터 사용 중)'); }
 }
@@ -1594,7 +1596,10 @@ function renderUnpaidSummary() {
 
   el.innerHTML = `
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:16px">
-      <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:12px">💰 세대별 미납 현황</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:13px;font-weight:700;color:#334155">💰 세대별 미납 현황</span>
+        <span style="font-size:11px;color:#94a3b8">조회 ${localStorage.getItem('wc_last_loaded') || '-'}</span>
+      </div>
       <div style="display:flex;flex-direction:column;gap:8px">
         ${rows.map(r => `
           <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:${r.unpaid > 0 ? '#fff' : '#f1f5f9'};border-radius:8px;border:1px solid ${r.unpaid > 0 ? '#fca5a5' : '#e2e8f0'}">
