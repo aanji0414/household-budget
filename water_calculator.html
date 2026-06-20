@@ -1050,6 +1050,7 @@
         </div>
       </div>
       <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;min-height:16px" id="gh-status"></div>
+      <div id="unpaid-summary"></div>
       <div class="year-filter-row">
         <select class="year-select" id="year-select" onchange="onYearChange(this.value)">
           <option value="all">전체 연도</option>
@@ -1566,6 +1567,48 @@ function deduplicateHistory() {
   renderHistory();
 }
 
+function renderUnpaidSummary() {
+  const el = document.getElementById('unpaid-summary');
+  if (!el) return;
+
+  // 세대 키: 고정세대는 이름만, 인원세대는 이름+인원
+  const hhKey = r => r.type === 'fixed' ? r.name : r.name + '(' + r.people + '명)';
+
+  // 전체 기록에서 미납 금액 합산
+  const totals = {}; // key → { label, unpaid, paid, order }
+  let order = 0;
+  history.forEach(entry => {
+    const ps = entry.paidStatus || {};
+    entry.results.forEach(r => {
+      const key = hhKey(r);
+      if (!totals[key]) totals[key] = { label: key, unpaid: 0, paid: 0, order: order++ };
+      if (ps[r.id]) totals[key].paid += r.finalAmount;
+      else totals[key].unpaid += r.finalAmount;
+    });
+  });
+
+  const rows = Object.values(totals).sort((a, b) => a.order - b.order);
+  const totalUnpaid = rows.reduce((s, r) => s + r.unpaid, 0);
+
+  if (rows.length === 0) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:12px">💰 세대별 미납 현황</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${rows.map(r => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:${r.unpaid > 0 ? '#fff' : '#f1f5f9'};border-radius:8px;border:1px solid ${r.unpaid > 0 ? '#fca5a5' : '#e2e8f0'}">
+            <span style="font-size:13px;font-weight:600;color:#475569">${r.label}</span>
+            <span style="font-size:14px;font-weight:700;color:${r.unpaid > 0 ? '#dc2626' : '#94a3b8'}">${r.unpaid > 0 ? r.unpaid.toLocaleString() + '원' : '완납'}</span>
+          </div>`).join('')}
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;font-weight:600;color:#334155">총 미납 합계</span>
+        <span style="font-size:16px;font-weight:800;color:#dc2626">${totalUnpaid.toLocaleString()}원</span>
+      </div>
+    </div>`;
+}
+
 function renderHistory() {
   const container = document.getElementById('history-container');
   if (history.length === 0) {
@@ -1576,6 +1619,8 @@ function renderHistory() {
       </div>`;
     return;
   }
+
+  renderUnpaidSummary();
 
   // 연도 목록 추출 및 드롭다운 업데이트
   const allYears = [...new Set(history.map(getYear))].sort((a, b) => b - a);
